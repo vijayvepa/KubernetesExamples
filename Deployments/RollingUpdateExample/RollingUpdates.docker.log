@@ -1,0 +1,44 @@
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ sh BuildImages.sh 
+Sending build context to Docker daemon  3.072kB
+Step 1/4 : FROM node:alpine
+ ---> 4c6406de22fd
+Step 2/4 : LABEL author="Dan Wahlin"
+ ---> Using cache
+ ---> ea69966192b4
+Step 3/4 : COPY server.js /server.js
+ ---> Using cache
+ ---> 67532b07142d
+Step 4/4 : ENTRYPOINT ["node", "server.js"]
+ ---> Using cache
+ ---> 104274e8a011
+Successfully built 104274e8a011
+Successfully tagged node-app:1.0
+Sending build context to Docker daemon  3.584kB
+Step 1/4 : FROM node:alpine
+ ---> 4c6406de22fd
+Step 2/4 : LABEL author="Dan Wahlin"
+ ---> Using cache
+ ---> ea69966192b4
+Step 3/4 : COPY server.js /server.js
+ ---> 3a31b10faed3
+Step 4/4 : ENTRYPOINT ["node", "server.js"]
+ ---> Running in b9ae1b6e99d6
+Removing intermediate container b9ae1b6e99d6
+ ---> 5dbe5598f173
+Successfully built 5dbe5598f173
+Successfully tagged node-app:2.0
+Sending build context to Docker daemon  3.584kB
+Step 1/4 : FROM node:alpine
+ ---> 4c6406de22fd
+Step 2/4 : LABEL author="Dan Wahlin"
+ ---> Using cache
+ ---> ea69966192b4
+Step 3/4 : COPY server.js /server.js
+ ---> 1fa1ffd1ead5
+Step 4/4 : ENTRYPOINT ["node", "server.js"]
+ ---> Running in 5c3e07678353
+Removing intermediate container 5c3e07678353
+ ---> eaab907030de
+Successfully built eaab907030de
+Successfully tagged node-app:3.0
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ 

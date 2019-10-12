@@ -1,0 +1,143 @@
+MACC02RR83AG8WP:Example vijayvepakomma$ k create -f DeploymentExample.yaml --save-config
+deployment.apps/my-nginx created
+
+MACC02RR83AG8WP:Example vijayvepakomma$ k get deployments
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+my-nginx   0/1     1            0           32s
+
+MACC02RR83AG8WP:Example vijayvepakomma$ k get all
+NAME                            READY   STATUS             RESTARTS   AGE
+pod/my-busy-box                 1/1     Running            17         3d
+pod/my-nginx                    1/1     Running            1          3d1h
+pod/my-nginx-58b77484df-h9b4h   0/1     ImagePullBackOff   0          48s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   7d
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   0/1     1            0           48s
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-58b77484df   1         1         0       48s
+MACC02RR83AG8WP:Example vijayvepakomma$ k delete deployment -f DeploymentExample.yaml 
+error: when paths, URLs, or stdin is provided as input, you may not specify resource arguments as well
+MACC02RR83AG8WP:Example vijayvepakomma$ k delete -f DeploymentExample.yaml 
+deployment.apps "my-nginx" deleted
+MACC02RR83AG8WP:Example vijayvepakomma$ k create -f DeploymentExample.yaml --save-config
+deployment.apps/my-nginx created
+MACC02RR83AG8WP:Example vijayvepakomma$ k get all
+NAME                            READY   STATUS        RESTARTS   AGE
+pod/my-busy-box                 1/1     Running       17         3d
+pod/my-nginx                    1/1     Running       1          3d1h
+pod/my-nginx-58b77484df-h9b4h   0/1     Terminating   0          90s
+pod/my-nginx-5975c9f858-7s728   1/1     Running       0          5s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   7d
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   1/1     1            1           5s
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   1         1         1       5s
+MACC02RR83AG8WP:Example vijayvepakomma$ k get deployments
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+my-nginx   1/1     1            1           20s
+MACC02RR83AG8WP:Example vijayvepakomma$ k describe deployment my-nginx
+Name:                   my-nginx
+Namespace:              default
+CreationTimestamp:      Sat, 12 Oct 2019 09:31:21 -0400
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 1
+                        kubectl.kubernetes.io/last-applied-configuration:
+                          {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"my-nginx","namespace":"default"},"spec":{"selector":{"mat...
+Selector:               app=my-nginx
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=my-nginx
+  Containers:
+   my-nginx:
+    Image:      nginx:alpine
+    Port:       80/TCP
+    Host Port:  0/TCP
+    Limits:
+      cpu:        200m
+      memory:     128Mi
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+MACC02RR83AG8WP:Example vijayvepakomma$ k scale -f DeploymentExample.yaml --replicas=4
+deployment.apps/my-nginx scaled
+MACC02RR83AG8WP:Example vijayvepakomma$ k get all
+NAME                            READY   STATUS             RESTARTS   AGE
+pod/my-busy-box                 0/1     CrashLoopBackOff   19         3d
+pod/my-nginx                    1/1     Running            1          3d1h
+pod/my-nginx-5975c9f858-7s728   1/1     Running            0          12m
+pod/my-nginx-5975c9f858-mklt7   1/1     Running            0          4s
+pod/my-nginx-5975c9f858-sv4j5   1/1     Running            0          4s
+pod/my-nginx-5975c9f858-w9chb   1/1     Running            0          4s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   7d
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   4/4     4            4           12m
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   4         4         4       12m
+MACC02RR83AG8WP:Example vijayvepakomma$ k delete -f DeploymentExample.yaml 
+deployment.apps "my-nginx" deleted
+MACC02RR83AG8WP:Example vijayvepakomma$ k get all
+NAME              READY   STATUS    RESTARTS   AGE
+pod/my-busy-box   1/1     Running   20         3d
+pod/my-nginx      1/1     Running   1          3d1h
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   7d
+MACC02RR83AG8WP:Example vijayvepakomma$ k apply -f DeploymentExample.yaml 
+deployment.apps/my-nginx created
+MACC02RR83AG8WP:Example vijayvepakomma$ k get all
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/my-busy-box                 1/1     Running   20         3d
+pod/my-nginx                    1/1     Running   1          3d1h
+pod/my-nginx-5975c9f858-b5xxq   1/1     Running   0          4s
+pod/my-nginx-5975c9f858-l4769   1/1     Running   0          4s
+pod/my-nginx-5975c9f858-zfzvs   1/1     Running   0          4s
+pod/my-nginx-5975c9f858-zzq24   1/1     Running   0          4s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   7d
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   4/4     4            4           4s
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   4         4         4       4s
+MACC02RR83AG8WP:Example vijayvepakomma$ k apply -f DeploymentExample.yaml 
+deployment.apps/my-nginx configured
+MACC02RR83AG8WP:Example vijayvepakomma$ k get all
+NAME                            READY   STATUS             RESTARTS   AGE
+pod/my-busy-box                 0/1     CrashLoopBackOff   23         3d1h
+pod/my-nginx                    1/1     Running            1          3d2h
+pod/my-nginx-5975c9f858-b5xxq   1/1     Terminating        0          51m
+pod/my-nginx-5975c9f858-l4769   1/1     Running            0          51m
+pod/my-nginx-5975c9f858-zfzvs   1/1     Terminating        0          51m
+pod/my-nginx-5975c9f858-zzq24   1/1     Running            0          51m
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   7d1h
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   2/2     2            2           51m
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   2         2         2       51m
+MACC02RR83AG8WP:Example vijayvepakomma$ 

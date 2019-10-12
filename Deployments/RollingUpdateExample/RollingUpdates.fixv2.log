@@ -1,0 +1,221 @@
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ k delete -f Service.yml 
+service "node-app" deleted
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ k apply -f Service.yml 
+service/node-app created
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ k apply -f DeploymentV2.yml
+deployment.apps/node-app configured
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ k apply -f DeploymentV1.yml
+deployment.apps/node-app configured
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ k get all
+NAME                            READY   STATUS        RESTARTS   AGE
+pod/my-busy-box                 1/1     Running       34         3d2h
+pod/my-nginx                    1/1     Running       1          3d3h
+pod/my-nginx-5975c9f858-l4769   1/1     Running       0          95m
+pod/my-nginx-5975c9f858-zzq24   1/1     Running       0          95m
+pod/node-app-6fcfc897d6-52gvd   1/1     Terminating   0          19s
+pod/node-app-6fcfc897d6-ptrd4   1/1     Running       0          19s
+pod/node-app-6fcfc897d6-w2vwg   1/1     Running       0          51s
+pod/node-app-9467ddbbf-64vs9    1/1     Running       0          7s
+pod/node-app-9467ddbbf-pxpl7    1/1     Running       0          19s
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        7d2h
+service/node-app     LoadBalancer   10.103.40.123   localhost     80:30267/TCP   61s
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   2/2     2            2           95m
+deployment.apps/node-app   4/3     2            3           23m
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   2         2         2       95m
+replicaset.apps/node-app-6694c56467   0         0         0       11m
+replicaset.apps/node-app-6fcfc897d6   2         2         2       13m
+replicaset.apps/node-app-9467ddbbf    2         2         2       23m
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ k get all
+NAME                            READY   STATUS        RESTARTS   AGE
+pod/my-busy-box                 1/1     Running       35         3d2h
+pod/my-nginx                    1/1     Running       1          3d3h
+pod/my-nginx-5975c9f858-l4769   1/1     Running       0          95m
+pod/my-nginx-5975c9f858-zzq24   1/1     Running       0          95m
+pod/node-app-6fcfc897d6-ptrd4   0/1     Terminating   0          60s
+pod/node-app-6fcfc897d6-w2vwg   1/1     Terminating   0          92s
+pod/node-app-9467ddbbf-64vs9    1/1     Running       0          48s
+pod/node-app-9467ddbbf-pxpl7    1/1     Running       0          60s
+pod/node-app-9467ddbbf-zd4jc    1/1     Running       0          36s
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        7d2h
+service/node-app     LoadBalancer   10.103.40.123   localhost     80:30267/TCP   102s
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   2/2     2            2           95m
+deployment.apps/node-app   3/3     3            3           23m
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   2         2         2       95m
+replicaset.apps/node-app-6694c56467   0         0         0       11m
+replicaset.apps/node-app-6fcfc897d6   0         0         0       14m
+replicaset.apps/node-app-9467ddbbf    3         3         3       23m
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ k get all
+NAME                            READY   STATUS        RESTARTS   AGE
+pod/my-busy-box                 1/1     Running       35         3d2h
+pod/my-nginx                    1/1     Running       1          3d3h
+pod/my-nginx-5975c9f858-l4769   1/1     Running       0          96m
+pod/my-nginx-5975c9f858-zzq24   1/1     Running       0          96m
+pod/node-app-6fcfc897d6-w2vwg   0/1     Terminating   0          102s
+pod/node-app-9467ddbbf-64vs9    1/1     Running       0          58s
+pod/node-app-9467ddbbf-pxpl7    1/1     Running       0          70s
+pod/node-app-9467ddbbf-zd4jc    1/1     Running       0          46s
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        7d2h
+service/node-app     LoadBalancer   10.103.40.123   localhost     80:30267/TCP   112s
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   2/2     2            2           96m
+deployment.apps/node-app   3/3     3            3           24m
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   2         2         2       96m
+replicaset.apps/node-app-6694c56467   0         0         0       11m
+replicaset.apps/node-app-6fcfc897d6   0         0         0       14m
+replicaset.apps/node-app-9467ddbbf    3         3         3       24m
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ k get all
+NAME                            READY   STATUS        RESTARTS   AGE
+pod/my-busy-box                 1/1     Running       35         3d2h
+pod/my-nginx                    1/1     Running       1          3d3h
+pod/my-nginx-5975c9f858-l4769   1/1     Running       0          96m
+pod/my-nginx-5975c9f858-zzq24   1/1     Running       0          96m
+pod/node-app-6fcfc897d6-w2vwg   0/1     Terminating   0          107s
+pod/node-app-9467ddbbf-64vs9    1/1     Running       0          63s
+pod/node-app-9467ddbbf-pxpl7    1/1     Running       0          75s
+pod/node-app-9467ddbbf-zd4jc    1/1     Running       0          51s
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        7d2h
+service/node-app     LoadBalancer   10.103.40.123   localhost     80:30267/TCP   117s
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   2/2     2            2           96m
+deployment.apps/node-app   3/3     3            3           24m
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   2         2         2       96m
+replicaset.apps/node-app-6694c56467   0         0         0       12m
+replicaset.apps/node-app-6fcfc897d6   0         0         0       14m
+replicaset.apps/node-app-9467ddbbf    3         3         3       24m
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ k get all
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/my-busy-box                 1/1     Running   35         3d2h
+pod/my-nginx                    1/1     Running   1          3d3h
+pod/my-nginx-5975c9f858-l4769   1/1     Running   0          96m
+pod/my-nginx-5975c9f858-zzq24   1/1     Running   0          96m
+pod/node-app-9467ddbbf-64vs9    1/1     Running   0          80s
+pod/node-app-9467ddbbf-pxpl7    1/1     Running   0          92s
+pod/node-app-9467ddbbf-zd4jc    1/1     Running   0          68s
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        7d2h
+service/node-app     LoadBalancer   10.103.40.123   localhost     80:30267/TCP   2m14s
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   2/2     2            2           96m
+deployment.apps/node-app   3/3     3            3           24m
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   2         2         2       96m
+replicaset.apps/node-app-6694c56467   0         0         0       12m
+replicaset.apps/node-app-6fcfc897d6   0         0         0       14m
+replicaset.apps/node-app-9467ddbbf    3         3         3       24m
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ docker rmi node-app:2.0
+Untagged: node-app:2.0
+Deleted: sha256:a27f1b7c8c020950fd080c60726cabfdeda2366c6dc11ff4949264eada93b0ef
+Deleted: sha256:521afb9ad80d527883b30a3278d83538f7596eaf09c6d1bc701812a37c3b167d
+Deleted: sha256:4c4bdcd6e2d2226d12ea6ca6d9dcd7695bc22107d15df0a6130273429f6aee88
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ docker build node-app/v2 -t node-app:2.0
+Sending build context to Docker daemon  3.584kB
+Step 1/4 : FROM node:alpine
+ ---> 4c6406de22fd
+Step 2/4 : LABEL author="Dan Wahlin"
+ ---> Using cache
+ ---> ea69966192b4
+Step 3/4 : COPY server.js /server.js
+ ---> befcac31c0ed
+Step 4/4 : ENTRYPOINT ["node", "server.js"]
+ ---> Running in 3a44e4d5016e
+Removing intermediate container 3a44e4d5016e
+ ---> 3086fc369ec8
+Successfully built 3086fc369ec8
+Successfully tagged node-app:2.0
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ k apply -f DeploymentV2.yml
+deployment.apps/node-app configured
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ k get all
+NAME                            READY   STATUS             RESTARTS   AGE
+pod/my-busy-box                 0/1     CrashLoopBackOff   35         3d2h
+pod/my-nginx                    1/1     Running            1          3d3h
+pod/my-nginx-5975c9f858-l4769   1/1     Running            0          97m
+pod/my-nginx-5975c9f858-zzq24   1/1     Running            0          97m
+pod/node-app-6fcfc897d6-5p5v2   1/1     Running            0          5s
+pod/node-app-9467ddbbf-64vs9    1/1     Terminating        0          2m25s
+pod/node-app-9467ddbbf-pxpl7    1/1     Terminating        0          2m37s
+pod/node-app-9467ddbbf-zd4jc    1/1     Terminating        0          2m13s
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        7d2h
+service/node-app     LoadBalancer   10.103.40.123   localhost     80:30267/TCP   3m19s
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   2/2     2            2           97m
+deployment.apps/node-app   1/1     1            1           25m
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   2         2         2       97m
+replicaset.apps/node-app-6694c56467   0         0         0       13m
+replicaset.apps/node-app-6fcfc897d6   1         1         1       15m
+replicaset.apps/node-app-9467ddbbf    0         0         0       25m
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ k get all
+NAME                            READY   STATUS             RESTARTS   AGE
+pod/my-busy-box                 0/1     CrashLoopBackOff   35         3d2h
+pod/my-nginx                    1/1     Running            1          3d3h
+pod/my-nginx-5975c9f858-l4769   1/1     Running            0          98m
+pod/my-nginx-5975c9f858-zzq24   1/1     Running            0          98m
+pod/node-app-6fcfc897d6-5p5v2   1/1     Running            0          34s
+pod/node-app-9467ddbbf-64vs9    0/1     Terminating        0          2m54s
+pod/node-app-9467ddbbf-pxpl7    1/1     Terminating        0          3m6s
+pod/node-app-9467ddbbf-zd4jc    0/1     Terminating        0          2m42s
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        7d2h
+service/node-app     LoadBalancer   10.103.40.123   localhost     80:30267/TCP   3m48s
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   2/2     2            2           98m
+deployment.apps/node-app   1/1     1            1           26m
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   2         2         2       98m
+replicaset.apps/node-app-6694c56467   0         0         0       13m
+replicaset.apps/node-app-6fcfc897d6   1         1         1       16m
+replicaset.apps/node-app-9467ddbbf    0         0         0       25m
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ k get all
+NAME                            READY   STATUS             RESTARTS   AGE
+pod/my-busy-box                 0/1     CrashLoopBackOff   35         3d2h
+pod/my-nginx                    1/1     Running            1          3d3h
+pod/my-nginx-5975c9f858-l4769   1/1     Running            0          98m
+pod/my-nginx-5975c9f858-zzq24   1/1     Running            0          98m
+pod/node-app-6fcfc897d6-5p5v2   1/1     Running            0          47s
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        7d2h
+service/node-app     LoadBalancer   10.103.40.123   localhost     80:30267/TCP   4m1s
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   2/2     2            2           98m
+deployment.apps/node-app   1/1     1            1           26m
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   2         2         2       98m
+replicaset.apps/node-app-6694c56467   0         0         0       14m
+replicaset.apps/node-app-6fcfc897d6   1         1         1       16m
+replicaset.apps/node-app-9467ddbbf    0         0         0       26m
+MACC02RR83AG8WP:RollingUpdateExample vijayvepakomma$ 
