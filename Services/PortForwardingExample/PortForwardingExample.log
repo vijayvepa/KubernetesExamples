@@ -1,0 +1,57 @@
+MACC02RR83AG8WP:Example vijayvepakomma$ k apply -f DeploymentExample.yaml 
+deployment.apps/my-nginx unchanged
+MACC02RR83AG8WP:Example vijayvepakomma$ k get all
+NAME                            READY   STATUS             RESTARTS   AGE
+pod/my-busy-box                 0/1     CrashLoopBackOff   43         3d3h
+pod/my-nginx                    1/1     Running            1          3d3h
+pod/my-nginx-5975c9f858-l4769   1/1     Running            0          131m
+pod/my-nginx-5975c9f858-zzq24   1/1     Running            0          131m
+pod/node-app-6fcfc897d6-5p5v2   1/1     Running            0          33m
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        7d2h
+service/node-app     LoadBalancer   10.103.40.123   localhost     80:30267/TCP   37m
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   2/2     2            2           131m
+deployment.apps/node-app   1/1     1            1           59m
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   2         2         2       131m
+replicaset.apps/node-app-6694c56467   0         0         0       47m
+replicaset.apps/node-app-6fcfc897d6   1         1         1       49m
+replicaset.apps/node-app-9467ddbbf    0         0         0       59m
+MACC02RR83AG8WP:Example vijayvepakomma$ k port-forward pod/my-nginx-5975c9f858-zzq24 8080:80
+Forwarding from 127.0.0.1:8080 -> 80
+Forwarding from [::1]:8080 -> 80
+Handling connection for 8080
+Handling connection for 8080
+^CMACC02RR83AG8WP:Example vijayvepakomma$ k get deployments
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+my-nginx   2/2     2            2           133m
+node-app   1/1     1            1           61m
+MACC02RR83AG8WP:Example vijayvepakomma$ k port-forward deployment/my-nginx
+error: TYPE/NAME and list of ports are required for port-forward
+See 'kubectl port-forward -h' for help and examples
+MACC02RR83AG8WP:Example vijayvepakomma$ k port-forward deployment/my-nginx 8080
+Forwarding from 127.0.0.1:8080 -> 8080
+Forwarding from [::1]:8080 -> 8080
+Handling connection for 8080
+Handling connection for 8080
+E1012 12:00:09.979213   45972 portforward.go:400] an error occurred forwarding 8080 -> 8080: error forwarding port 8080 to pod b9ec943639300899a35546d13551122195fa30780ceda709ff83e5668fb34958, uid : exit status 1: 2019/10/12 16:00:09 socat[89626] E connect(16, AF=2 127.0.0.1:8080, 16): Connection refused
+E1012 12:00:09.979220   45972 portforward.go:400] an error occurred forwarding 8080 -> 8080: error forwarding port 8080 to pod b9ec943639300899a35546d13551122195fa30780ceda709ff83e5668fb34958, uid : exit status 1: 2019/10/12 16:00:09 socat[89625] E connect(16, AF=2 127.0.0.1:8080, 16): Connection refused
+^CMACC02RR83AG8WP:Example vijayvepakomma$ k port-forward deployment/my-nginx 8080
+Forwarding from 127.0.0.1:8080 -> 8080
+Forwarding from [::1]:8080 -> 8080
+Handling connection for 8080
+Handling connection for 8080
+E1012 12:01:00.794939   46176 portforward.go:400] an error occurred forwarding 8080 -> 8080: error forwarding port 8080 to pod b9ec943639300899a35546d13551122195fa30780ceda709ff83e5668fb34958, uid : exit status 1: 2019/10/12 16:01:00 socat[90323] E connect(16, AF=2 127.0.0.1:8080, 16): Connection refused
+E1012 12:01:00.800514   46176 portforward.go:400] an error occurred forwarding 8080 -> 8080: error forwarding port 8080 to pod b9ec943639300899a35546d13551122195fa30780ceda709ff83e5668fb34958, uid : exit status 1: 2019/10/12 16:01:00 socat[90324] E connect(16, AF=2 127.0.0.1:8080, 16): Connection refused
+Handling connection for 8080
+E1012 12:01:00.811756   46176 portforward.go:400] an error occurred forwarding 8080 -> 8080: error forwarding port 8080 to pod b9ec943639300899a35546d13551122195fa30780ceda709ff83e5668fb34958, uid : exit status 1: 2019/10/12 16:01:00 socat[90325] E connect(16, AF=2 127.0.0.1:8080, 16): Connection refused
+^CMACC02RR83AG8WP:Example vijayvepakomma$ k port-forward deployment/my-nginx 8080:80
+Forwarding from 127.0.0.1:8080 -> 80
+Forwarding from [::1]:8080 -> 80
+Handling connection for 8080
+Handling connection for 8080
+^CMACC02RR83AG8WP:Example vijayvepakomma$ 

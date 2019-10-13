@@ -1,0 +1,252 @@
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ k get all
+NAME                            READY   STATUS             RESTARTS   AGE
+pod/my-busy-box                 0/1     CrashLoopBackOff   51         3d21h
+pod/my-nginx                    1/1     Running            1          3d21h
+pod/my-nginx-5975c9f858-l4769   1/1     Running            0          20h
+pod/my-nginx-5975c9f858-zzq24   1/1     Running            0          20h
+pod/node-app-6fcfc897d6-5p5v2   1/1     Running            0          18h
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        7d20h
+service/node-app     LoadBalancer   10.103.40.123   localhost     80:30267/TCP   18h
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   2/2     2            2           20h
+deployment.apps/node-app   1/1     1            1           19h
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858   2         2         2       20h
+replicaset.apps/node-app-6694c56467   0         0         0       18h
+replicaset.apps/node-app-6fcfc897d6   1         1         1       18h
+replicaset.apps/node-app-9467ddbbf    0         0         0       19h
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ k run nginx-standalone --image=nginx:alpine
+kubectl run --generator=deployment/apps.v1 is DEPRECATED and will be removed in a future version. Use kubectl run --generator=run-pod/v1 or kubectl create instead.
+deployment.apps/nginx-standalone created
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ k get pods
+NAME                                READY   STATUS             RESTARTS   AGE
+my-busy-box                         0/1     CrashLoopBackOff   51         3d21h
+my-nginx                            1/1     Running            1          3d21h
+my-nginx-5975c9f858-l4769           1/1     Running            0          20h
+my-nginx-5975c9f858-zzq24           1/1     Running            0          20h
+nginx-standalone-77d6656d95-snpgg   1/1     Running            0          6s
+node-app-6fcfc897d6-5p5v2           1/1     Running            0          18h
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ cd Services/ClusterIPExample/ClusterIPService.yaml
+bash: cd: Services/ClusterIPExample/ClusterIPService.yaml: Not a directory
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ cd Services/ClusterIPExample
+MACC02RR83AG8WP:ClusterIPExample vijayvepakomma$ k apply ClusterIPService.yaml 
+error: must specify one of -f and -k
+MACC02RR83AG8WP:ClusterIPExample vijayvepakomma$ k apply -f ClusterIPService.yaml 
+service/nginx-clusterip created
+MACC02RR83AG8WP:ClusterIPExample vijayvepakomma$ k delete -f ClusterIPService.yaml 
+service "nginx-clusterip" deleted
+MACC02RR83AG8WP:ClusterIPExample vijayvepakomma$ k exec nginx-standalone-77d6656d95-snpgg -it sh
+/ # apk add curl
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.10/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.10/community/x86_64/APKINDEX.tar.gz
+(1/4) Installing ca-certificates (20190108-r0)
+(2/4) Installing nghttp2-libs (1.39.2-r0)
+(3/4) Installing libcurl (7.66.0-r0)
+(4/4) Installing curl (7.66.0-r0)
+Executing busybox-1.30.1-r2.trigger
+Executing ca-certificates-20190108-r0.trigger
+OK: 30 MiB in 41 packages
+/ # exit
+MACC02RR83AG8WP:ClusterIPExample vijayvepakomma$ k get my-nginx-5975c9f858-l4769 -o yaml
+error: the server doesn't have a resource type "my-nginx-5975c9f858-l4769"
+MACC02RR83AG8WP:ClusterIPExample vijayvepakomma$ k get pod my-nginx-5975c9f858-l4769 -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2019-10-12T13:45:15Z"
+  generateName: my-nginx-5975c9f858-
+  labels:
+    app: my-nginx
+    pod-template-hash: 5975c9f858
+  name: my-nginx-5975c9f858-l4769
+  namespace: default
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: my-nginx-5975c9f858
+    uid: 8532e599-ecf6-11e9-b152-025000000001
+  resourceVersion: "32465"
+  selfLink: /api/v1/namespaces/default/pods/my-nginx-5975c9f858-l4769
+  uid: 8536079a-ecf6-11e9-b152-025000000001
+spec:
+  containers:
+  - image: nginx:alpine
+    imagePullPolicy: IfNotPresent
+    name: my-nginx
+    ports:
+    - containerPort: 80
+      protocol: TCP
+    resources:
+      limits:
+        cpu: 200m
+        memory: 128Mi
+      requests:
+        cpu: 200m
+        memory: 128Mi
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: default-token-sz4rq
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: docker-desktop
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: default-token-sz4rq
+    secret:
+      defaultMode: 420
+      secretName: default-token-sz4rq
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2019-10-12T13:45:15Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2019-10-12T13:45:17Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2019-10-12T13:45:17Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2019-10-12T13:45:15Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://f2c23ca04bb2d43a4a93665f726201a4bbcc31e9e7b8832cff415c0603466558
+    image: nginx:alpine
+    imageID: docker-pullable://nginx@sha256:77f340700d08fd45026823f44fc0010a5bd2237c2d049178b473cd2ad977d071
+    lastState: {}
+    name: my-nginx
+    ready: true
+    restartCount: 0
+    state:
+      running:
+        startedAt: "2019-10-12T13:45:17Z"
+  hostIP: 192.168.65.3
+  phase: Running
+  podIP: 10.1.0.23
+  qosClass: Guaranteed
+  startTime: "2019-10-12T13:45:15Z"
+MACC02RR83AG8WP:ClusterIPExample vijayvepakomma$ k exec nginx-standalone-77d6656d95-snpgg -it sh
+/ # curl 10.1.0.23
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+/ # exit
+MACC02RR83AG8WP:ClusterIPExample vijayvepakomma$ k apply ClusterIPService.yaml 
+error: must specify one of -f and -k
+MACC02RR83AG8WP:ClusterIPExample vijayvepakomma$ k apply -f ClusterIPService.yaml 
+service/nginx-clusterip created
+MACC02RR83AG8WP:ClusterIPExample vijayvepakomma$ k get services
+NAME              TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes        ClusterIP      10.96.0.1        <none>        443/TCP        7d21h
+nginx-clusterip   ClusterIP      10.109.217.179   <none>        8080/TCP       26s
+node-app          LoadBalancer   10.103.40.123    localhost     80:30267/TCP   18h
+MACC02RR83AG8WP:ClusterIPExample vijayvepakomma$ k exec nginx-standalone-77d6656d95-snpgg -it sh
+/ # curl 10.109.217.179 
+
+^C
+/ # curl 10.109.217.179:8080
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+/ # exit
+MACC02RR83AG8WP:ClusterIPExample vijayvepakomma$ k exec nginx-standalone-77d6656d95-snpgg -it sh
+/ # curl http://nginx-clusterip:8080
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+/ # exit
+MACC02RR83AG8WP:ClusterIPExample vijayvepakomma$ 
