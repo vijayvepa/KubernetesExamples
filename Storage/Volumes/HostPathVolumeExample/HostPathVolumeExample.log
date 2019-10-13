@@ -1,0 +1,202 @@
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ cd Storage/Volumes/HostPathVolumeExample/
+MACC02RR83AG8WP:HostPathVolumeExample vijayvepakomma$ k apply -f HostPathVolumeExample.yaml 
+pod/docker-volume created
+MACC02RR83AG8WP:HostPathVolumeExample vijayvepakomma$ k get pods
+NAME                                READY   STATUS              RESTARTS   AGE
+docker-volume                       0/1     ContainerCreating   0          3s
+my-busy-box                         0/1     CrashLoopBackOff    107        4d
+my-nginx                            1/1     Running             1          4d1h
+my-nginx-5975c9f858-l4769           1/1     Running             0          24h
+my-nginx-5975c9f858-zzq24           1/1     Running             0          24h
+nginx-alpine-volume                 2/2     Running             0          7m16s
+nginx-standalone-77d6656d95-snpgg   1/1     Running             0          3h44m
+node-app-6fcfc897d6-5p5v2           1/1     Running             0          22h
+MACC02RR83AG8WP:HostPathVolumeExample vijayvepakomma$ k describe pod docker-volume
+Name:               docker-volume
+Namespace:          default
+Priority:           0
+PriorityClassName:  <none>
+Node:               docker-desktop/192.168.65.3
+Start Time:         Sun, 13 Oct 2019 09:48:19 -0400
+Labels:             name=docker-volume
+Annotations:        kubectl.kubernetes.io/last-applied-configuration:
+                      {"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"labels":{"name":"docker-volume"},"name":"docker-volume","namespace":"default...
+Status:             Running
+IP:                 10.1.0.57
+Containers:
+  docker:
+    Container ID:  docker://a803edfba2d0a5918b928a531a744aa9f15c966d7d40d8d7195f4e26a9101217
+    Image:         docker
+    Image ID:      docker-pullable://docker@sha256:5e89ca80a1962d484f11a7dd6af0e64a76b72a35570d4e0f485c4af13e9398ae
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sleep
+    Args:
+      10000
+    State:          Running
+      Started:      Sun, 13 Oct 2019 09:48:27 -0400
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:     500m
+      memory:  128Mi
+    Requests:
+      cpu:        500m
+      memory:     128Mi
+    Environment:  <none>
+    Mounts:
+      /var/run/docker.sock from docker-socket (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-sz4rq (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  docker-socket:
+    Type:          HostPath (bare host directory volume)
+    Path:          /var/run/docker.sock
+    HostPathType:  Socket
+  default-token-sz4rq:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-sz4rq
+    Optional:    false
+QoS Class:       Guaranteed
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type    Reason     Age   From                     Message
+  ----    ------     ----  ----                     -------
+  Normal  Scheduled  29s   default-scheduler        Successfully assigned default/docker-volume to docker-desktop
+  Normal  Pulling    28s   kubelet, docker-desktop  Pulling image "docker"
+  Normal  Pulled     22s   kubelet, docker-desktop  Successfully pulled image "docker"
+  Normal  Created    22s   kubelet, docker-desktop  Created container docker
+  Normal  Started    21s   kubelet, docker-desktop  Started container docker
+MACC02RR83AG8WP:HostPathVolumeExample vijayvepakomma$ k exec docker-volume -it sh
+/ # docker
+
+Usage:  docker [OPTIONS] COMMAND
+
+A self-sufficient runtime for containers
+
+Options:
+      --config string      Location of client config files (default "/root/.docker")
+  -c, --context string     Name of the context to use to connect to the daemon (overrides DOCKER_HOST env var and default context set with "docker context use")
+  -D, --debug              Enable debug mode
+  -H, --host list          Daemon socket(s) to connect to
+  -l, --log-level string   Set the logging level ("debug"|"info"|"warn"|"error"|"fatal") (default "info")
+      --tls                Use TLS; implied by --tlsverify
+      --tlscacert string   Trust certs signed only by this CA (default "/root/.docker/ca.pem")
+      --tlscert string     Path to TLS certificate file (default "/root/.docker/cert.pem")
+      --tlskey string      Path to TLS key file (default "/root/.docker/key.pem")
+      --tlsverify          Use TLS and verify the remote
+  -v, --version            Print version information and quit
+
+Management Commands:
+  builder     Manage builds
+  config      Manage Docker configs
+  container   Manage containers
+  context     Manage contexts
+  engine      Manage the docker engine
+  image       Manage images
+  network     Manage networks
+  node        Manage Swarm nodes
+  plugin      Manage plugins
+  secret      Manage Docker secrets
+  service     Manage services
+  stack       Manage Docker stacks
+  swarm       Manage Swarm
+  system      Manage Docker
+  trust       Manage trust on Docker images
+  volume      Manage volumes
+
+Commands:
+  attach      Attach local standard input, output, and error streams to a running container
+  build       Build an image from a Dockerfile
+  commit      Create a new image from a container's changes
+  cp          Copy files/folders between a container and the local filesystem
+  create      Create a new container
+  diff        Inspect changes to files or directories on a container's filesystem
+  events      Get real time events from the server
+  exec        Run a command in a running container
+  export      Export a container's filesystem as a tar archive
+  history     Show the history of an image
+  images      List images
+  import      Import the contents from a tarball to create a filesystem image
+  info        Display system-wide information
+  inspect     Return low-level information on Docker objects
+  kill        Kill one or more running containers
+  load        Load an image from a tar archive or STDIN
+  login       Log in to a Docker registry
+  logout      Log out from a Docker registry
+  logs        Fetch the logs of a container
+  pause       Pause all processes within one or more containers
+  port        List port mappings or a specific mapping for the container
+  ps          List containers
+  pull        Pull an image or a repository from a registry
+  push        Push an image or a repository to a registry
+  rename      Rename a container
+  restart     Restart one or more containers
+  rm          Remove one or more containers
+  rmi         Remove one or more images
+  run         Run a command in a new container
+  save        Save one or more images to a tar archive (streamed to STDOUT by default)
+  search      Search the Docker Hub for images
+  start       Start one or more stopped containers
+  stats       Display a live stream of container(s) resource usage statistics
+  stop        Stop one or more running containers
+  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+  top         Display the running processes of a container
+  unpause     Unpause all processes within one or more containers
+  update      Update configuration of one or more containers
+  version     Show the Docker version information
+  wait        Block until one or more containers stop, then print their exit codes
+
+Run 'docker COMMAND --help' for more information on a command.
+/ # docker ps -a
+CONTAINER ID        IMAGE                            COMMAND                  CREATED              STATUS                       PORTS               NAMES
+a803edfba2d0        docker                           "sleep 10000"            About a minute ago   Up About a minute                                k8s_docker_docker-volume_default_1d711c06-edc0-11e9-b152-025000000001_0
+e59463bb3ee3        k8s.gcr.io/pause:3.1             "/pause"                 About a minute ago   Up About a minute                                k8s_POD_docker-volume_default_1d711c06-edc0-11e9-b152-025000000001_0
+796e111ff5bc        k8s.gcr.io/busybox               "/bin/sh -c 'touch /…"   5 minutes ago        Exited (137) 4 minutes ago                       k8s_my-busy-box_my-busy-box_default_43d68a3b-ea93-11e9-b152-025000000001_107
+b0f4501ddcb3        alpine                           "/bin/sh -c 'while t…"   8 minutes ago        Up 8 minutes                                     k8s_html-updater_nginx-alpine-volume_default_1b766c57-edbf-11e9-b152-025000000001_0
+211662c15ce3        4d3c246dfef2                     "nginx -g 'daemon of…"   8 minutes ago        Up 8 minutes                                     k8s_nginx_nginx-alpine-volume_default_1b766c57-edbf-11e9-b152-025000000001_0
+5216a206a579        k8s.gcr.io/pause:3.1             "/pause"                 8 minutes ago        Up 8 minutes                                     k8s_POD_nginx-alpine-volume_default_1b766c57-edbf-11e9-b152-025000000001_0
+f86d0413a5fa        4d3c246dfef2                     "nginx -g 'daemon of…"   4 hours ago          Up 4 hours                                       k8s_nginx-standalone_nginx-standalone-77d6656d95-snpgg_default_d02f2b6e-eda0-11e9-b152-025000000001_0
+ef8fd5944ef7        k8s.gcr.io/pause:3.1             "/pause"                 4 hours ago          Up 4 hours                                       k8s_POD_nginx-standalone-77d6656d95-snpgg_default_d02f2b6e-eda0-11e9-b152-025000000001_0
+d3e43b2e56f0        3086fc369ec8                     "node server.js"         22 hours ago         Up 22 hours                                      k8s_node-app_node-app-6fcfc897d6-5p5v2_default_2474e804-ed04-11e9-b152-025000000001_0
+c878584198af        k8s.gcr.io/pause:3.1             "/pause"                 22 hours ago         Up 22 hours                                      k8s_POD_node-app-6fcfc897d6-5p5v2_default_2474e804-ed04-11e9-b152-025000000001_0
+b84be9083107        4d3c246dfef2                     "nginx -g 'daemon of…"   24 hours ago         Up 24 hours                                      k8s_my-nginx_my-nginx-5975c9f858-zzq24_default_8538a3a7-ecf6-11e9-b152-025000000001_0
+f2c23ca04bb2        4d3c246dfef2                     "nginx -g 'daemon of…"   24 hours ago         Up 24 hours                                      k8s_my-nginx_my-nginx-5975c9f858-l4769_default_8536079a-ecf6-11e9-b152-025000000001_0
+b9ec94363930        k8s.gcr.io/pause:3.1             "/pause"                 24 hours ago         Up 24 hours                                      k8s_POD_my-nginx-5975c9f858-l4769_default_8536079a-ecf6-11e9-b152-025000000001_0
+8bfab07907a7        k8s.gcr.io/pause:3.1             "/pause"                 24 hours ago         Up 24 hours                                      k8s_POD_my-nginx-5975c9f858-zzq24_default_8538a3a7-ecf6-11e9-b152-025000000001_0
+ffa393aaa4bb        k8s.gcr.io/pause:3.1             "/pause"                 4 days ago           Up 4 days                                        k8s_POD_my-busy-box_default_43d68a3b-ea93-11e9-b152-025000000001_0
+c0090a652ff5        4d3c246dfef2                     "nginx -g 'daemon of…"   4 days ago           Up 4 days                                        k8s_my-nginx_my-nginx_default_453d9460-ea8e-11e9-b152-025000000001_1
+80ca0455bb33        4d3c246dfef2                     "nginx -g 'daemon of…"   4 days ago           Exited (0) 4 days ago                            k8s_my-nginx_my-nginx_default_453d9460-ea8e-11e9-b152-025000000001_0
+a5299cbb1f56        k8s.gcr.io/pause:3.1             "/pause"                 4 days ago           Up 4 days                                        k8s_POD_my-nginx_default_453d9460-ea8e-11e9-b152-025000000001_0
+cbf0b3ab3065        kubernetesui/metrics-scraper     "/metrics-sidecar"       7 days ago           Up 7 days                                        k8s_dashboard-metrics-scraper_dashboard-metrics-scraper-677768c755-lpqhx_kubernetes-dashboard_27f35152-e7cf-11e9-b152-025000000001_0
+e83f8fdc7121        kubernetesui/dashboard           "/dashboard --insecu…"   7 days ago           Up 7 days                                        k8s_kubernetes-dashboard_kubernetes-dashboard-995fd6fb4-j5l99_kubernetes-dashboard_27e7e8da-e7cf-11e9-b152-025000000001_0
+7794cedd9afc        k8s.gcr.io/pause:3.1             "/pause"                 7 days ago           Up 7 days                                        k8s_POD_dashboard-metrics-scraper-677768c755-lpqhx_kubernetes-dashboard_27f35152-e7cf-11e9-b152-025000000001_0
+3d945b48a083        k8s.gcr.io/pause:3.1             "/pause"                 7 days ago           Up 7 days                                        k8s_POD_kubernetes-dashboard-995fd6fb4-j5l99_kubernetes-dashboard_27e7e8da-e7cf-11e9-b152-025000000001_0
+659a0e9e37de        docker/kube-compose-controller   "/compose-controller…"   8 days ago           Up 8 days                                        k8s_compose_compose-6c67d745f6-7vxvk_docker_d925a1a7-e771-11e9-b152-025000000001_0
+b662bf3bc895        docker/kube-compose-api-server   "/api-server --kubec…"   8 days ago           Up 8 days                                        k8s_compose_compose-api-57ff65b8c7-l6vxg_docker_d9201425-e771-11e9-b152-025000000001_0
+c72c84b76ddd        k8s.gcr.io/pause:3.1             "/pause"                 8 days ago           Up 8 days                                        k8s_POD_compose-6c67d745f6-7vxvk_docker_d925a1a7-e771-11e9-b152-025000000001_0
+2bfb0a8e998f        k8s.gcr.io/pause:3.1             "/pause"                 8 days ago           Up 8 days                                        k8s_POD_compose-api-57ff65b8c7-l6vxg_docker_d9201425-e771-11e9-b152-025000000001_0
+74f36f961096        eb516548c180                     "/coredns -conf /etc…"   8 days ago           Up 8 days                                        k8s_coredns_coredns-584795fc57-kg22q_kube-system_baefb0ea-e771-11e9-b152-025000000001_0
+62d719930673        eb516548c180                     "/coredns -conf /etc…"   8 days ago           Up 8 days                                        k8s_coredns_coredns-584795fc57-mm64m_kube-system_baeeba8e-e771-11e9-b152-025000000001_0
+787585bc055e        ed8adf767eeb                     "/usr/local/bin/kube…"   8 days ago           Up 8 days                                        k8s_kube-proxy_kube-proxy-g2wbx_kube-system_bae6c173-e771-11e9-b152-025000000001_0
+36f0937ce692        k8s.gcr.io/pause:3.1             "/pause"                 8 days ago           Up 8 days                                        k8s_POD_coredns-584795fc57-kg22q_kube-system_baefb0ea-e771-11e9-b152-025000000001_0
+bd98c7f8ad84        k8s.gcr.io/pause:3.1             "/pause"                 8 days ago           Up 8 days                                        k8s_POD_coredns-584795fc57-mm64m_kube-system_baeeba8e-e771-11e9-b152-025000000001_0
+a2742e42cc9d        k8s.gcr.io/pause:3.1             "/pause"                 8 days ago           Up 8 days                                        k8s_POD_kube-proxy-g2wbx_kube-system_bae6c173-e771-11e9-b152-025000000001_0
+f97a781babfa        2c4adeb21b4f                     "etcd --advertise-cl…"   8 days ago           Up 8 days                                        k8s_etcd_etcd-docker-desktop_kube-system_3773efb8e009876ddfa2c10173dba95e_0
+24cb95b0ec53        d27987bc993e                     "kube-scheduler --bi…"   8 days ago           Up 8 days                                        k8s_kube-scheduler_kube-scheduler-docker-desktop_kube-system_e437f0c3c5cacc84317d94ff2059ae3b_0
+ae5a12a49071        0e422c9884cf                     "kube-apiserver --ad…"   8 days ago           Up 8 days                                        k8s_kube-apiserver_kube-apiserver-docker-desktop_kube-system_0dba01cced9882fb86c5694d381dc9a5_0
+8fe28015161c        4bb274b1f2c3                     "kube-controller-man…"   8 days ago           Up 8 days                                        k8s_kube-controller-manager_kube-controller-manager-docker-desktop_kube-system_4f69bc13e6a168e54390c8aa9060ca11_0
+6b365e428902        k8s.gcr.io/pause:3.1             "/pause"                 8 days ago           Up 8 days                                        k8s_POD_kube-scheduler-docker-desktop_kube-system_e437f0c3c5cacc84317d94ff2059ae3b_0
+b51a9e89c0da        k8s.gcr.io/pause:3.1             "/pause"                 8 days ago           Up 8 days                                        k8s_POD_kube-controller-manager-docker-desktop_kube-system_4f69bc13e6a168e54390c8aa9060ca11_0
+6c345c57d483        k8s.gcr.io/pause:3.1             "/pause"                 8 days ago           Up 8 days                                        k8s_POD_kube-apiserver-docker-desktop_kube-system_0dba01cced9882fb86c5694d381dc9a5_0
+0ba49d7ab120        k8s.gcr.io/pause:3.1             "/pause"                 8 days ago           Up 8 days                                        k8s_POD_etcd-docker-desktop_kube-system_3773efb8e009876ddfa2c10173dba95e_0
+/ # exit
+MACC02RR83AG8WP:HostPathVolumeExample vijayvepakomma$ 

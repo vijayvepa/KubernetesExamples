@@ -1,0 +1,102 @@
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ cd Storage/Volumes/EmptyDirVolumeExample/
+MACC02RR83AG8WP:EmptyDirVolumeExample vijayvepakomma$ k apply -f EmptyDirVolumeExample.yaml 
+pod/nginx-alpine-volume created
+MACC02RR83AG8WP:EmptyDirVolumeExample vijayvepakomma$ k get-all
+Error: unknown command "get-all" for "kubectl"
+Run 'kubectl --help' for usage.
+unknown command "get-all" for "kubectl"
+MACC02RR83AG8WP:EmptyDirVolumeExample vijayvepakomma$ k get all
+NAME                                    READY   STATUS             RESTARTS   AGE
+pod/my-busy-box                         0/1     CrashLoopBackOff   103        4d
+pod/my-nginx                            1/1     Running            1          4d1h
+pod/my-nginx-5975c9f858-l4769           1/1     Running            0          23h
+pod/my-nginx-5975c9f858-zzq24           1/1     Running            0          23h
+pod/nginx-alpine-volume                 2/2     Running            0          26s
+pod/nginx-standalone-77d6656d95-snpgg   1/1     Running            0          3h29m
+pod/node-app-6fcfc897d6-5p5v2           1/1     Running            0          22h
+
+NAME                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes        ClusterIP   10.96.0.1        <none>        443/TCP        8d
+service/nginx-clusterip   ClusterIP   10.109.217.179   <none>        8080/TCP       3h21m
+service/nginx-nodeport    NodePort    10.105.221.182   <none>        80:31000/TCP   69m
+
+NAME                               READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx           2/2     2            2           23h
+deployment.apps/nginx-standalone   1/1     1            1           3h29m
+deployment.apps/node-app           1/1     1            1           22h
+
+NAME                                          DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858           2         2         2       23h
+replicaset.apps/nginx-standalone-77d6656d95   1         1         1       3h29m
+replicaset.apps/node-app-6694c56467           0         0         0       22h
+replicaset.apps/node-app-6fcfc897d6           1         1         1       22h
+replicaset.apps/node-app-9467ddbbf            0         0         0       22h
+MACC02RR83AG8WP:EmptyDirVolumeExample vijayvepakomma$ k port-forward nginx-alpine-volume 8080:80
+Forwarding from 127.0.0.1:8080 -> 80
+Forwarding from [::1]:8080 -> 80
+Handling connection for 8080
+Handling connection for 8080
+Handling connection for 8080
+Handling connection for 8080
+^CMACC02RR83AG8WP:EmptyDirVolumeExample vijayvepakomma$ k exec nginx-alpine-volume -it sh
+Defaulting container name to nginx.
+Use 'kubectl describe pod/nginx-alpine-volume -n default' to see all of the containers in this pod.
+/ # ls
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # cd usr/share
+/usr/share # ls
+GeoIP     apk       doc       licenses  man       misc      nginx     terminfo  zoneinfo
+/usr/share # cd nginx
+/usr/share/nginx # ls
+html
+/usr/share/nginx # cd html
+/usr/share/nginx/html # ls
+/usr/share/nginx/html # ls
+/usr/share/nginx/html # date
+Sun Oct 13 13:37:35 UTC 2019
+/usr/share/nginx/html # date >> index.html
+sh: can't create index.html: Read-only file system
+/usr/share/nginx/html # exit
+command terminated with exit code 1
+MACC02RR83AG8WP:EmptyDirVolumeExample vijayvepakomma$ k delete -f EmptyDirVolumeExample.yaml 
+pod "nginx-alpine-volume" deleted
+
+MACC02RR83AG8WP:EmptyDirVolumeExample vijayvepakomma$ 
+MACC02RR83AG8WP:EmptyDirVolumeExample vijayvepakomma$ k apply -f EmptyDirVolumeExample.yaml 
+pod/nginx-alpine-volume created
+MACC02RR83AG8WP:EmptyDirVolumeExample vijayvepakomma$ k port-forward nginx-alpine-volume 8080:80
+error: unable to forward port because pod is not running. Current status=Pending
+MACC02RR83AG8WP:EmptyDirVolumeExample vijayvepakomma$ k get all
+NAME                                    READY   STATUS             RESTARTS   AGE
+pod/my-busy-box                         0/1     CrashLoopBackOff   105        4d
+pod/my-nginx                            1/1     Running            1          4d1h
+pod/my-nginx-5975c9f858-l4769           1/1     Running            0          23h
+pod/my-nginx-5975c9f858-zzq24           1/1     Running            0          23h
+pod/nginx-alpine-volume                 2/2     Running            0          11s
+pod/nginx-standalone-77d6656d95-snpgg   1/1     Running            0          3h37m
+pod/node-app-6fcfc897d6-5p5v2           1/1     Running            0          22h
+
+NAME                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes        ClusterIP   10.96.0.1        <none>        443/TCP        8d
+service/nginx-clusterip   ClusterIP   10.109.217.179   <none>        8080/TCP       3h28m
+service/nginx-nodeport    NodePort    10.105.221.182   <none>        80:31000/TCP   77m
+
+NAME                               READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx           2/2     2            2           23h
+deployment.apps/nginx-standalone   1/1     1            1           3h37m
+deployment.apps/node-app           1/1     1            1           22h
+
+NAME                                          DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858           2         2         2       23h
+replicaset.apps/nginx-standalone-77d6656d95   1         1         1       3h37m
+replicaset.apps/node-app-6694c56467           0         0         0       22h
+replicaset.apps/node-app-6fcfc897d6           1         1         1       22h
+replicaset.apps/node-app-9467ddbbf            0         0         0       22h
+MACC02RR83AG8WP:EmptyDirVolumeExample vijayvepakomma$ k port-forward nginx-alpine-volume 8080:80
+Forwarding from 127.0.0.1:8080 -> 80
+Forwarding from [::1]:8080 -> 80
+Handling connection for 8080
+Handling connection for 8080
+Handling connection for 8080
+Handling connection for 8080
+^CMACC02RR83AG8WP:EmptyDirVolumeExample vijayvepakomma$ 
