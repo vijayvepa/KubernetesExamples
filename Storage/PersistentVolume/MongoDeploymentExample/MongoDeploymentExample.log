@@ -1,0 +1,117 @@
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ cd Storage/PersistentVolume/MongoDeploymentExample/
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k apply MongoDeploymentStorageClass.yaml 
+error: must specify one of -f and -k
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k apply -f MongoDeploymentStorageClass.yaml 
+storageclass.storage.k8s.io/local-storage created
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k delete -f StorageClass.yaml 
+storageclass.storage.k8s.io "local-storage" deleted
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k apply -f ConfigMap.yaml 
+configmap/mongo-env created
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ mkdir /tmp/data/db
+mkdir: /tmp/data: No such file or directory
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ mkdir /tmp/data
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ mkdir /tmp/data/db
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k apply -f StorageClass.yaml 
+storageclass.storage.k8s.io/local-storage created
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k apply -f PersistentVolume.yaml 
+error: error validating "PersistentVolume.yaml": error validating data: [ValidationError(PersistentVolume.spec.capacity.accessModes): invalid type for io.k8s.apimachinery.pkg.api.resource.Quantity: got "array", expected "string", ValidationError(PersistentVolume.spec.capacity.local): invalid type for io.k8s.apimachinery.pkg.api.resource.Quantity: got "map", expected "string", ValidationError(PersistentVolume.spec.capacity.nodeAffinity): invalid type for io.k8s.apimachinery.pkg.api.resource.Quantity: got "map", expected "string"]; if you choose to ignore these errors, turn validation off with --validate=false
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k apply -f PersistentVolume.yaml 
+Error from server (BadRequest): error when creating "PersistentVolume.yaml": PersistentVolume in version "v1" cannot be handled as a PersistentVolume: v1.PersistentVolume.Spec: v1.PersistentVolumeSpec.Capacity: unmarshalerDecoder: quantities must match the regular expression '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$', error found in #10 byte of ...|WriteOnce","local":"|..., bigger context ...|,"spec":{"capacity":{"accessModes":"ReadWriteOnce","local":"/tmp/data/db","storage":"1Gi","storageCl|...
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k apply -f PersistentVolume.yaml 
+persistentvolume/mongo-pv created
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k apply -f PersistentVolumeClaim.yaml 
+persistentvolumeclaim/mongo-pvc created
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k apply -f Service.yaml 
+service/mongo created
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k apply -f StatefulSet.yaml 
+error: error validating "StatefulSet.yaml": error validating data: ValidationError(StatefulSet.spec.template.metadata): unknown field "spec" in io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta; if you choose to ignore these errors, turn validation off with --validate=false
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k apply -f StatefulSet.yaml 
+statefulset.apps/mongo created
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k get all
+NAME                                    READY   STATUS              RESTARTS   AGE
+pod/docker-volume                       1/1     Running             0          63m
+pod/mongo-0                             0/1     ContainerCreating   0          7s
+pod/my-busy-box                         1/1     Running             124        4d2h
+pod/my-nginx                            1/1     Running             1          4d2h
+pod/my-nginx-5975c9f858-l4769           1/1     Running             0          25h
+pod/my-nginx-5975c9f858-zzq24           1/1     Running             0          25h
+pod/nginx-alpine-volume                 2/2     Running             0          70m
+pod/nginx-standalone-77d6656d95-snpgg   1/1     Running             0          4h47m
+pod/node-app-6fcfc897d6-5p5v2           1/1     Running             0          23h
+
+NAME                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes        ClusterIP   10.96.0.1        <none>        443/TCP        8d
+service/mongo             ClusterIP   10.109.26.203    <none>        27017/TCP      61s
+service/nginx-clusterip   ClusterIP   10.109.217.179   <none>        8080/TCP       4h39m
+service/nginx-nodeport    NodePort    10.105.221.182   <none>        80:31000/TCP   147m
+
+NAME                               READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx           2/2     2            2           25h
+deployment.apps/nginx-standalone   1/1     1            1           4h47m
+deployment.apps/node-app           1/1     1            1           23h
+
+NAME                                          DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858           2         2         2       25h
+replicaset.apps/nginx-standalone-77d6656d95   1         1         1       4h47m
+replicaset.apps/node-app-6694c56467           0         0         0       23h
+replicaset.apps/node-app-6fcfc897d6           1         1         1       23h
+replicaset.apps/node-app-9467ddbbf            0         0         0       23h
+
+NAME                     READY   AGE
+statefulset.apps/mongo   0/1     7s
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k get all
+NAME                                    READY   STATUS    RESTARTS   AGE
+pod/docker-volume                       1/1     Running   0          64m
+pod/mongo-0                             1/1     Running   0          29s
+pod/my-busy-box                         1/1     Running   124        4d2h
+pod/my-nginx                            1/1     Running   1          4d2h
+pod/my-nginx-5975c9f858-l4769           1/1     Running   0          25h
+pod/my-nginx-5975c9f858-zzq24           1/1     Running   0          25h
+pod/nginx-alpine-volume                 2/2     Running   0          71m
+pod/nginx-standalone-77d6656d95-snpgg   1/1     Running   0          4h48m
+pod/node-app-6fcfc897d6-5p5v2           1/1     Running   0          23h
+
+NAME                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes        ClusterIP   10.96.0.1        <none>        443/TCP        8d
+service/mongo             ClusterIP   10.109.26.203    <none>        27017/TCP      83s
+service/nginx-clusterip   ClusterIP   10.109.217.179   <none>        8080/TCP       4h39m
+service/nginx-nodeport    NodePort    10.105.221.182   <none>        80:31000/TCP   148m
+
+NAME                               READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx           2/2     2            2           25h
+deployment.apps/nginx-standalone   1/1     1            1           4h48m
+deployment.apps/node-app           1/1     1            1           23h
+
+NAME                                          DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5975c9f858           2         2         2       25h
+replicaset.apps/nginx-standalone-77d6656d95   1         1         1       4h48m
+replicaset.apps/node-app-6694c56467           0         0         0       23h
+replicaset.apps/node-app-6fcfc897d6           1         1         1       23h
+replicaset.apps/node-app-9467ddbbf            0         0         0       23h
+
+NAME                     READY   AGE
+statefulset.apps/mongo   1/1     29s
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k exec mongo-0 -it sh
+# mongo
+MongoDB shell version v4.2.0
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("eb5f0b71-e5c9-4b26-a4e1-27269dd15155") }
+MongoDB server version: 4.2.0
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+        http://docs.mongodb.org/
+Questions? Try the support group
+        http://groups.google.com/group/mongodb-user
+> exit
+bye
+# exit
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ ls /tmp/data/db
+WiredTiger                              WiredTigerLAS.wt                        collection-4--812958474900676498.wt     index-5--812958474900676498.wt          sizeStorer.wt
+WiredTiger.lock                         _mdb_catalog.wt                         diagnostic.data                         index-6--812958474900676498.wt          storage.bson
+WiredTiger.turtle                       collection-0--812958474900676498.wt     index-1--812958474900676498.wt          journal
+WiredTiger.wt                           collection-2--812958474900676498.wt     index-3--812958474900676498.wt          mongod.lock
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k get pv
+NAME       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM               STORAGECLASS    REASON   AGE
+mongo-pv   1Gi        RWO            Retain           Bound    default/mongo-pvc   local-storage            4m8s
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ 
