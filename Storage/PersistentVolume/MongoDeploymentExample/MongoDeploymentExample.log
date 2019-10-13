@@ -115,3 +115,11 @@ MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k get pv
 NAME       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM               STORAGECLASS    REASON   AGE
 mongo-pv   1Gi        RWO            Retain           Bound    default/mongo-pvc   local-storage            4m8s
 MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ 
+
+MACC02RR83AG8WP:MongoDeploymentExample vijayvepakomma$ k delete -f MongoDeployment.yaml 
+configmap "mongo-env" deleted
+storageclass.storage.k8s.io "local-storage" deleted
+persistentvolume "mongo-pv" deleted
+persistentvolumeclaim "mongo-pvc" deleted
+service "mongo" deleted
+statefulset.apps "mongo" deleted
