@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-configmap
+spec:
+  selector:
+    matchLabels:
+      app: node-configmap
+  template:
+    metadata:
+      labels:
+        app: node-configmap
+    spec:
+      containers:
+      - name: node-configmap
+        image: node-configmap
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        volumeMounts:
+          - mountPath: /etc/config
+            name: app-config-vol
+        env:
+        - name: ENEMIES
+          valueFrom:
+            configMapKeyRef:
+              key: enemies
+              name: app-settings
+        envFrom:
+          - configMapRef:
+              name: app-settings            
+          
+      volumes:
+        - name: app-config-vol
+          configMap:
+              name: app-settings  
