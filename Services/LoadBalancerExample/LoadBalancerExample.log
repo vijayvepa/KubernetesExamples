@@ -1,0 +1,21 @@
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ cd Services/LoadBalanc
+bash: cd: Services/LoadBalanc: No such file or directory
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ cd Services/LoadBalancer
+bash: cd: Services/LoadBalancer: No such file or directory
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ cd Services/LoadBalancerExample/
+MACC02RR83AG8WP:LoadBalancerExample vijayvepakomma$ k apply -f LoadBalancerExample.yaml 
+service/nginx-loadbalancer created
+MACC02RR83AG8WP:LoadBalancerExample vijayvepakomma$ k get services
+NAME                 TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes           ClusterIP      10.96.0.1        <none>        443/TCP        7d23h
+nginx-clusterip      ClusterIP      10.109.217.179   <none>        8080/TCP       136m
+nginx-loadbalancer   LoadBalancer   10.108.246.240   <pending>     80:31448/TCP   24s
+nginx-nodeport       NodePort       10.105.221.182   <none>        80:31000/TCP   4m50s
+node-app             LoadBalancer   10.103.40.123    localhost     80:30267/TCP   21h
+MACC02RR83AG8WP:LoadBalancerExample vijayvepakomma$ k delete service node-app     
+service "node-app" deleted
+MACC02RR83AG8WP:LoadBalancerExample vijayvepakomma$ k delete service nginx-loadbalancer
+service "nginx-loadbalancer" deleted
+MACC02RR83AG8WP:LoadBalancerExample vijayvepakomma$ 
+
+
