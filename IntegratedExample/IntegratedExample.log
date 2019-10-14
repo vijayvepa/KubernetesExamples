@@ -1,0 +1,326 @@
+git clone https://github.com/DanWahlin/CodeWithDanDockerServices
+cd CodeWithDanDockerServices
+
+
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ export APP_ENV=production
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ export DOCKER_ACCT=codewithdan
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ npm install
+
+> fsevents@1.2.9 install /Users/vijayvepakomma/Github/CodeWithDanDockerServices/node_modules/fsevents
+> node install
+
+node-pre-gyp WARN Using request for node-pre-gyp https download 
+[fsevents] Success: "/Users/vijayvepakomma/Github/CodeWithDanDockerServices/node_modules/fsevents/lib/binding/Release/node-v64-darwin-x64/fse.node" is installed via remote
+
+> node-sass@4.12.0 install /Users/vijayvepakomma/Github/CodeWithDanDockerServices/node_modules/node-sass
+> node scripts/install.js
+
+Downloading binary from https://github.com/sass/node-sass/releases/download/v4.12.0/darwin-x64-64_binding.node
+Download complete░░⸩ ⠋ :
+Binary saved to /Users/vijayvepakomma/Github/CodeWithDanDockerServices/node_modules/node-sass/vendor/darwin-x64-64/binding.node
+Caching binary to /Users/vijayvepakomma/.npm/node-sass/4.12.0/darwin-x64-64_binding.node
+
+> node-sass@4.12.0 postinstall /Users/vijayvepakomma/Github/CodeWithDanDockerServices/node_modules/node-sass
+> node scripts/build.js
+
+Binary found at /Users/vijayvepakomma/Github/CodeWithDanDockerServices/node_modules/node-sass/vendor/darwin-x64-64/binding.node
+Testing binary
+Binary is fine
+added 829 packages from 730 contributors and audited 10054 packages in 17.419s
+found 3 high severity vulnerabilities
+  run `npm audit fix` to fix them, or `npm audit` for details
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ docker-compose build
+Building mongo
+Step 1/8 : FROM mongo
+ ---> 58477a771fb4
+Step 2/8 : LABEL author="Dan Wahlin"
+ ---> Running in 8d1e7a05f64f
+Removing intermediate container 8d1e7a05f64f
+ ---> 095933109147
+Step 3/8 : RUN apt-get update && apt-get install -y cron netcat-traditional netcat-openbsd
+ ---> Running in dc4cb3d564f9
+Ign:1 http://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 InRelease
+Get:2 http://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 Release [3481 B]
+Get:3 http://security.ubuntu.com/ubuntu bionic-security InRelease [88.7 kB]
+Get:4 http://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 Release.gpg [801 B]
+Get:5 http://archive.ubuntu.com/ubuntu bionic InRelease [242 kB]
+Get:6 http://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2/multiverse amd64 Packages [2124 B]
+Get:7 http://security.ubuntu.com/ubuntu bionic-security/multiverse amd64 Packages [5665 B]
+Get:8 http://archive.ubuntu.com/ubuntu bionic-updates InRelease [88.7 kB]
+Get:9 http://security.ubuntu.com/ubuntu bionic-security/main amd64 Packages [680 kB]
+Get:10 http://archive.ubuntu.com/ubuntu bionic-backports InRelease [74.6 kB]
+Get:11 http://archive.ubuntu.com/ubuntu bionic/universe amd64 Packages [11.3 MB]
+Get:12 http://security.ubuntu.com/ubuntu bionic-security/universe amd64 Packages [777 kB]
+Get:13 http://security.ubuntu.com/ubuntu bionic-security/restricted amd64 Packages [11.3 kB]
+Get:14 http://archive.ubuntu.com/ubuntu bionic/multiverse amd64 Packages [186 kB]
+Get:15 http://archive.ubuntu.com/ubuntu bionic/restricted amd64 Packages [13.5 kB]
+Get:16 http://archive.ubuntu.com/ubuntu bionic/main amd64 Packages [1344 kB]
+Get:17 http://archive.ubuntu.com/ubuntu bionic-updates/main amd64 Packages [975 kB]
+Get:18 http://archive.ubuntu.com/ubuntu bionic-updates/universe amd64 Packages [1295 kB]
+Get:19 http://archive.ubuntu.com/ubuntu bionic-updates/multiverse amd64 Packages [8734 B]
+Get:20 http://archive.ubuntu.com/ubuntu bionic-updates/restricted amd64 Packages [21.9 kB]
+Get:21 http://archive.ubuntu.com/ubuntu bionic-backports/main amd64 Packages [2496 B]
+Get:22 http://archive.ubuntu.com/ubuntu bionic-backports/universe amd64 Packages [4227 B]
+Fetched 17.2 MB in 7s (2476 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  libbsd0
+Suggested packages:
+  anacron logrotate checksecurity exim4 | postfix | mail-transport-agent
+The following NEW packages will be installed:
+  cron libbsd0 netcat-openbsd netcat-traditional
+0 upgraded, 4 newly installed, 0 to remove and 10 not upgraded.
+Need to get 212 kB of archives.
+After this operation, 667 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu bionic/main amd64 cron amd64 3.0pl1-128.1ubuntu1 [68.8 kB]
+Get:2 http://archive.ubuntu.com/ubuntu bionic/main amd64 libbsd0 amd64 0.8.7-1 [41.5 kB]
+Get:3 http://archive.ubuntu.com/ubuntu bionic-updates/main amd64 netcat-openbsd amd64 1.187-1ubuntu0.1 [39.8 kB]
+Get:4 http://archive.ubuntu.com/ubuntu bionic/universe amd64 netcat-traditional amd64 1.10-41.1 [61.7 kB]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched 212 kB in 1s (153 kB/s)
+Selecting previously unselected package cron.
+(Reading database ... 6734 files and directories currently installed.)
+Preparing to unpack .../cron_3.0pl1-128.1ubuntu1_amd64.deb ...
+Unpacking cron (3.0pl1-128.1ubuntu1) ...
+Selecting previously unselected package libbsd0:amd64.
+Preparing to unpack .../libbsd0_0.8.7-1_amd64.deb ...
+Unpacking libbsd0:amd64 (0.8.7-1) ...
+Selecting previously unselected package netcat-openbsd.
+Preparing to unpack .../netcat-openbsd_1.187-1ubuntu0.1_amd64.deb ...
+Unpacking netcat-openbsd (1.187-1ubuntu0.1) ...
+Selecting previously unselected package netcat-traditional.
+Preparing to unpack .../netcat-traditional_1.10-41.1_amd64.deb ...
+Unpacking netcat-traditional (1.10-41.1) ...
+Setting up netcat-traditional (1.10-41.1) ...
+update-alternatives: using /bin/nc.traditional to provide /bin/nc (nc) in auto mode
+update-alternatives: warning: skip creation of /usr/share/man/man1/nc.1.gz because associated file /usr/share/man/man1/nc.traditional.1.gz (of link group nc) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/man1/netcat.1.gz because associated file /usr/share/man/man1/nc.traditional.1.gz (of link group nc) doesn't exist
+Setting up libbsd0:amd64 (0.8.7-1) ...
+Setting up netcat-openbsd (1.187-1ubuntu0.1) ...
+update-alternatives: using /bin/nc.openbsd to provide /bin/nc (nc) in auto mode
+update-alternatives: warning: skip creation of /usr/share/man/man1/nc.1.gz because associated file /usr/share/man/man1/nc_openbsd.1.gz (of link group nc) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/man1/netcat.1.gz because associated file /usr/share/man/man1/nc_openbsd.1.gz (of link group nc) doesn't exist
+Setting up cron (3.0pl1-128.1ubuntu1) ...
+Adding group `crontab' (GID 101) ...
+Done.
+update-rc.d: warning: start and stop actions are no longer supported; falling back to defaults
+invoke-rc.d: could not determine current runlevel
+invoke-rc.d: policy-rc.d denied execution of start.
+Processing triggers for libc-bin (2.27-3ubuntu1) ...
+Removing intermediate container dc4cb3d564f9
+ ---> e046ec2523ec
+Step 4/8 : COPY ./.docker/mongo_scripts /mongo_scripts
+ ---> 3ebf3a5283bc
+Step 5/8 : RUN chmod +rx /mongo_scripts/*.sh
+ ---> Running in 5d1daa04f5a5
+Removing intermediate container 5d1daa04f5a5
+ ---> dbcde3704f19
+Step 6/8 : RUN touch /.firstrun
+ ---> Running in ff812b3d8768
+Removing intermediate container ff812b3d8768
+ ---> c76fe19a05d0
+Step 7/8 : EXPOSE 27017
+ ---> Running in 0896d7df47fe
+Removing intermediate container 0896d7df47fe
+ ---> 7fdc7b8166e7
+Step 8/8 : ENTRYPOINT ["/mongo_scripts/run.sh"]
+ ---> Running in 6826254efa40
+Removing intermediate container 6826254efa40
+ ---> 58956b833f4d
+
+Successfully built 58956b833f4d
+Successfully tagged codewithdan/mongo:latest
+Building redis
+Step 1/5 : FROM                 redis:latest
+latest: Pulling from library/redis
+b8f262c62ec6: Pull complete
+93789b5343a5: Pull complete
+49cdbb315637: Pull complete
+ea0579387266: Pull complete
+6b8ecda334de: Pull complete
+ac5a9c26d32a: Pull complete
+Digest: sha256:cb379e1a076fcd3d3f09e10d7b47ca631fb98fb33149ab559fa02c1b11436345
+Status: Downloaded newer image for redis:latest
+ ---> 01a52b3b5cd1
+Step 2/5 : LABEL       author="Dan Wahlin"
+ ---> Running in e0dd038bf700
+Removing intermediate container e0dd038bf700
+ ---> 633eaf6191ca
+Step 3/5 : COPY        ./.docker/config/redis.production.conf /etc/redis.conf
+ ---> eb34febe6d0c
+Step 4/5 : EXPOSE      6379
+ ---> Running in 5bf645ce23a7
+Removing intermediate container 5bf645ce23a7
+ ---> 8462b8ebba61
+Step 5/5 : ENTRYPOINT  ["redis-server", "/etc/redis.conf"]
+ ---> Running in 451299a5d126
+Removing intermediate container 451299a5d126
+ ---> 15c27c52eb83
+
+Successfully built 15c27c52eb83
+Successfully tagged codewithdan/redis:latest
+Building node
+Step 1/12 : FROM node:alpine
+ ---> 4c6406de22fd
+Step 2/12 : LABEL author="Dan Wahlin"
+ ---> Using cache
+ ---> ea69966192b4
+Step 3/12 : WORKDIR /var/www/codewithdan
+ ---> Running in eca640f633e1
+Removing intermediate container eca640f633e1
+ ---> 74a47b00bb44
+Step 4/12 : COPY ./package.json .
+ ---> ee8a586e689e
+Step 5/12 : COPY ./package-lock.json .
+ ---> d888513ed69d
+Step 6/12 : ENV NODE_ENV production
+ ---> Running in f3f478c1317e
+Removing intermediate container f3f478c1317e
+ ---> e2312609839c
+Step 7/12 : RUN npm install -g pm2@latest
+ ---> Running in c767e19cebcd
+/usr/local/bin/pm2 -> /usr/local/lib/node_modules/pm2/bin/pm2
+/usr/local/bin/pm2-dev -> /usr/local/lib/node_modules/pm2/bin/pm2-dev
+/usr/local/bin/pm2-docker -> /usr/local/lib/node_modules/pm2/bin/pm2-docker
+/usr/local/bin/pm2-runtime -> /usr/local/lib/node_modules/pm2/bin/pm2-runtime
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.1 (node_modules/pm2/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.1: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+
++ pm2@4.0.0
+added 208 packages from 189 contributors in 13.683s
+Removing intermediate container c767e19cebcd
+ ---> 40eb54c69ba6
+Step 8/12 : RUN npm install
+ ---> Running in 3375c643d612
+added 337 packages from 528 contributors and audited 10054 packages in 8.147s
+found 3 high severity vulnerabilities
+  run `npm audit fix` to fix them, or `npm audit` for details
+Removing intermediate container 3375c643d612
+ ---> bb68723144b1
+Step 9/12 : COPY    . .
+ ---> 75564781794c
+Step 10/12 : RUN mkdir -p /var/log/pm2
+ ---> Running in 9507f81877b2
+Removing intermediate container 9507f81877b2
+ ---> d2b7bc965caa
+Step 11/12 : EXPOSE             8080
+ ---> Running in 902bede903ac
+Removing intermediate container 902bede903ac
+ ---> e2f6315c02bc
+Step 12/12 : ENTRYPOINT ["pm2", "start", "server.js","--name","codewithdan","--log","/var/log/pm2/pm2.log","--watch","--no-daemon"]
+ ---> Running in 4d456f054d04
+Removing intermediate container 4d456f054d04
+ ---> ff8f9cd54817
+
+Successfully built ff8f9cd54817
+Successfully tagged codewithdan/node-codewithdan:latest
+Building nginx
+Step 1/12 : FROM nginx:alpine
+ ---> 4d3c246dfef2
+Step 2/12 : LABEL author="Dan Wahlin"
+ ---> Running in 7a8c59b11445
+Removing intermediate container 7a8c59b11445
+ ---> d753c92405dd
+Step 3/12 : VOLUME /var/cache/nginx
+ ---> Running in 1a0db93122ba
+Removing intermediate container 1a0db93122ba
+ ---> 36b60962dd03
+Step 4/12 : COPY ./.docker/config/nginx.production.conf /etc/nginx/nginx.conf
+ ---> 7e1b5611ce54
+Step 5/12 : COPY ./public /var/www/public
+ ---> c79ff4a3c60c
+Step 6/12 : COPY ./.certs/server.crt    /etc/nginx/server.crt
+ ---> a3fb8ca0169a
+Step 7/12 : COPY ./.certs/server.key    /etc/nginx/server.key
+ ---> 1df16c039227
+Step 8/12 : COPY ./.certs/dhparam.pem   /etc/nginx/dhparam.pem
+ ---> 54974a46023c
+Step 9/12 : RUN chmod 600 /etc/nginx/server.key
+ ---> Running in 210bc0dd3eb0
+Removing intermediate container 210bc0dd3eb0
+ ---> 52dc23303b54
+Step 10/12 : EXPOSE 80 443
+ ---> Running in c1c426fa7443
+Removing intermediate container c1c426fa7443
+ ---> 1aa9ba49f994
+Step 11/12 : ENTRYPOINT ["nginx"]
+ ---> Running in ea23ff5caa29
+Removing intermediate container ea23ff5caa29
+ ---> c24a36bfb249
+Step 12/12 : CMD ["-g", "daemon off;"]
+ ---> Running in 5c3c399fd525
+Removing intermediate container 5c3c399fd525
+ ---> bdf1a8e71956
+
+Successfully built bdf1a8e71956
+Successfully tagged codewithdan/nginx:latest
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k get secrets
+NAME                  TYPE                                  DATA   AGE
+db-passwords          Opaque                                2      15h
+default-token-sz4rq   kubernetes.io/service-account-token   3      8d
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k apply -f .k8s
+configmap/mongo-env created
+storageclass.storage.k8s.io/local-storage created
+persistentvolume/mongo-pv created
+persistentvolumeclaim/mongo-pvc created
+statefulset.apps/mongo created
+service/mongo created
+deployment.apps/nginx created
+service/nginx created
+configmap/node-env created
+deployment.apps/node created
+service/node created
+deployment.apps/redis created
+service/redis created
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k get all
+NAME                                  READY   STATUS    RESTARTS   AGE
+pod/docker-volume                     1/1     Running   1          20h
+pod/mongo-0                           1/1     Running   0          23s
+pod/my-busy-box                       1/1     Running   184        4d21h
+pod/my-nginx                          1/1     Running   1          4d21h
+pod/nginx-6fcdc7b59f-mb2t9            1/1     Running   0          23s
+pod/nginx-alpine-volume               2/2     Running   0          20h
+pod/node-55f9b5cd69-v4cqj             1/1     Running   0          22s
+pod/node-configmap-848b4989fd-rgw9d   1/1     Running   0          16h
+pod/redis-7d7fd78c88-xqc55            1/1     Running   0          22s
+
+NAME                      TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+service/kubernetes        ClusterIP      10.96.0.1        <none>        443/TCP                      8d
+service/mongo             ClusterIP      10.111.140.175   <none>        27017/TCP                    23s
+service/nginx             LoadBalancer   10.104.34.23     localhost     80:31223/TCP,443:32107/TCP   22s
+service/nginx-clusterip   ClusterIP      10.109.217.179   <none>        8080/TCP                     23h
+service/nginx-nodeport    NodePort       10.105.221.182   <none>        80:31000/TCP                 21h
+service/node              ClusterIP      10.109.58.182    <none>        8080/TCP                     22s
+service/redis             ClusterIP      10.101.173.127   <none>        6379/TCP                     22s
+
+NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginx            1/1     1            1           23s
+deployment.apps/node             1/1     1            1           22s
+deployment.apps/node-configmap   1/1     1            1           16h
+deployment.apps/redis            1/1     1            1           22s
+
+NAME                                        DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginx-6fcdc7b59f            1         1         1       23s
+replicaset.apps/node-55f9b5cd69             1         1         1       22s
+replicaset.apps/node-configmap-794664596b   0         0         0       16h
+replicaset.apps/node-configmap-848b4989fd   1         1         1       16h
+replicaset.apps/redis-7d7fd78c88            1         1         1       22s
+
+NAME                     READY   AGE
+statefulset.apps/mongo   1/1     23s
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k delete pod nginx
+Error from server (NotFound): pods "nginx" not found
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ my-nginx
+bash: my-nginx: command not found
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k delete pod my-nginx
+pod "my-nginx" deleted
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k delete deployment node-configmap
+deployment.extensions "node-configmap" deleted
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k delete service nginx-clusterip
+service "nginx-clusterip" deleted
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k delete service nginx-nodeport
+service "nginx-nodeport" deleted
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ 

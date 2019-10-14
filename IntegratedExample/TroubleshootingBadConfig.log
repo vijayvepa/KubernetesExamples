@@ -1,0 +1,1010 @@
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ docker-compose build
+WARNING: The DOCKER_ACCT variable is not set. Defaulting to a blank string.
+WARNING: The APP_ENV variable is not set. Defaulting to a blank string.
+ERROR: Couldn't find env file: /Users/vijayvepakomma/Github/CodeWithDanDockerServices/.docker/env/app..env
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ export APP_ENV=production
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ export DOCKER_ACCT=codewithdan
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ docker-compose build
+Building mongo
+Step 1/8 : FROM mongo
+ ---> 58477a771fb4
+Step 2/8 : LABEL author="Dan Wahlin"
+ ---> Using cache
+ ---> 095933109147
+Step 3/8 : RUN apt-get update && apt-get install -y cron netcat-traditional netcat-openbsd
+ ---> Using cache
+ ---> e046ec2523ec
+Step 4/8 : COPY ./.docker/mongo_scripts /mongo_scripts
+ ---> Using cache
+ ---> 3ebf3a5283bc
+Step 5/8 : RUN chmod +rx /mongo_scripts/*.sh
+ ---> Using cache
+ ---> dbcde3704f19
+Step 6/8 : RUN touch /.firstrun
+ ---> Using cache
+ ---> c76fe19a05d0
+Step 7/8 : EXPOSE 27017
+ ---> Using cache
+ ---> 7fdc7b8166e7
+Step 8/8 : ENTRYPOINT ["/mongo_scripts/run.sh"]
+ ---> Using cache
+ ---> 58956b833f4d
+
+Successfully built 58956b833f4d
+Successfully tagged codewithdan/mongo:latest
+Building redis
+Step 1/5 : FROM                 redis:latest
+ ---> 01a52b3b5cd1
+Step 2/5 : LABEL       author="Dan Wahlin"
+ ---> Using cache
+ ---> 633eaf6191ca
+Step 3/5 : COPY        ./.docker/config/redis.production.conf /etc/redis.conf
+ ---> Using cache
+ ---> eb34febe6d0c
+Step 4/5 : EXPOSE      6379
+ ---> Using cache
+ ---> 8462b8ebba61
+Step 5/5 : ENTRYPOINT  ["redis-server", "/etc/redis.conf"]
+ ---> Using cache
+ ---> 15c27c52eb83
+
+Successfully built 15c27c52eb83
+Successfully tagged codewithdan/redis:latest
+Building node
+Step 1/12 : FROM node:alpine
+ ---> 4c6406de22fd
+Step 2/12 : LABEL author="Dan Wahlin"
+ ---> Using cache
+ ---> ea69966192b4
+Step 3/12 : WORKDIR /var/www/codewithdan
+ ---> Using cache
+ ---> 74a47b00bb44
+Step 4/12 : COPY ./package.json .
+ ---> Using cache
+ ---> ee8a586e689e
+Step 5/12 : COPY ./package-lock.json .
+ ---> Using cache
+ ---> d888513ed69d
+Step 6/12 : ENV NODE_ENV production
+ ---> Using cache
+ ---> e2312609839c
+Step 7/12 : RUN npm install -g pm2@latest
+ ---> Using cache
+ ---> 40eb54c69ba6
+Step 8/12 : RUN npm install
+ ---> Using cache
+ ---> bb68723144b1
+Step 9/12 : COPY    . .
+ ---> e674dffff2a0
+Step 10/12 : RUN mkdir -p /var/log/pm2
+ ---> Running in e677f17be807
+Removing intermediate container e677f17be807
+ ---> 42615e13bd09
+Step 11/12 : EXPOSE             8080
+ ---> Running in bb21c0353d3e
+Removing intermediate container bb21c0353d3e
+ ---> 2fece6323f5c
+Step 12/12 : ENTRYPOINT ["pm2", "start", "server.js","--name","codewithdan","--log","/var/log/pm2/pm2.log","--watch","--no-daemon"]
+ ---> Running in c992bb953d44
+Removing intermediate container c992bb953d44
+ ---> 400e5de69ea5
+
+Successfully built 400e5de69ea5
+Successfully tagged codewithdan/node-codewithdan:latest
+Building nginx
+Step 1/12 : FROM nginx:alpine
+ ---> 4d3c246dfef2
+Step 2/12 : LABEL author="Dan Wahlin"
+ ---> Using cache
+ ---> d753c92405dd
+Step 3/12 : VOLUME /var/cache/nginx
+ ---> Using cache
+ ---> 36b60962dd03
+Step 4/12 : COPY ./.docker/config/nginx.production.conf /etc/nginx/nginx.conf
+ ---> Using cache
+ ---> 7e1b5611ce54
+Step 5/12 : COPY ./public /var/www/public
+ ---> Using cache
+ ---> c79ff4a3c60c
+Step 6/12 : COPY ./.certs/server.crt    /etc/nginx/server.crt
+ ---> Using cache
+ ---> a3fb8ca0169a
+Step 7/12 : COPY ./.certs/server.key    /etc/nginx/server.key
+ ---> Using cache
+ ---> 1df16c039227
+Step 8/12 : COPY ./.certs/dhparam.pem   /etc/nginx/dhparam.pem
+ ---> Using cache
+ ---> 54974a46023c
+Step 9/12 : RUN chmod 600 /etc/nginx/server.key
+ ---> Using cache
+ ---> 52dc23303b54
+Step 10/12 : EXPOSE 80 443
+ ---> Using cache
+ ---> 1aa9ba49f994
+Step 11/12 : ENTRYPOINT ["nginx"]
+ ---> Using cache
+ ---> c24a36bfb249
+Step 12/12 : CMD ["-g", "daemon off;"]
+ ---> Using cache
+ ---> bdf1a8e71956
+
+Successfully built bdf1a8e71956
+Successfully tagged codewithdan/nginx:latest
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k delete -f .k8s
+configmap "mongo-env" deleted
+storageclass.storage.k8s.io "local-storage" deleted
+persistentvolume "mongo-pv" deleted
+persistentvolumeclaim "mongo-pvc" deleted
+statefulset.apps "mongo" deleted
+service "mongo" deleted
+deployment.apps "nginx" deleted
+service "nginx" deleted
+configmap "node-env" deleted
+deployment.apps "node" deleted
+service "node" deleted
+deployment.apps "redis" deleted
+service "redis" deleted
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k apply -f .k8s
+configmap/mongo-env created
+storageclass.storage.k8s.io/local-storage created
+persistentvolume/mongo-pv created
+persistentvolumeclaim/mongo-pvc created
+statefulset.apps/mongo created
+service/mongo created
+deployment.apps/nginx created
+service/nginx created
+configmap/node-env created
+deployment.apps/node created
+service/node created
+deployment.apps/redis created
+service/redis created
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k get pods
+NAME                     READY   STATUS             RESTARTS   AGE
+docker-volume            1/1     Running            1          20h
+mongo-0                  1/1     Terminating        0          6m34s
+my-busy-box              0/1     CrashLoopBackOff   191        4d21h
+nginx-6fcdc7b59f-gx2tk   1/1     Running            0          4s
+nginx-alpine-volume      2/2     Running            0          20h
+node-55f9b5cd69-khm4g    1/1     Terminating        0          7m15s
+node-55f9b5cd69-mnp7w    1/1     Running            0          4s
+redis-7d7fd78c88-vcm9w   1/1     Running            0          4s
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k get pods
+NAME                     READY   STATUS             RESTARTS   AGE
+docker-volume            1/1     Running            1          20h
+mongo-0                  1/1     Terminating        0          6m44s
+my-busy-box              0/1     CrashLoopBackOff   191        4d21h
+nginx-6fcdc7b59f-gx2tk   1/1     Running            0          14s
+nginx-alpine-volume      2/2     Running            0          20h
+node-55f9b5cd69-khm4g    1/1     Terminating        0          7m25s
+node-55f9b5cd69-mnp7w    1/1     Running            0          14s
+redis-7d7fd78c88-vcm9w   1/1     Running            0          14s
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k get pods --watch
+NAME                     READY   STATUS             RESTARTS   AGE
+docker-volume            1/1     Running            1          20h
+my-busy-box              0/1     CrashLoopBackOff   191        4d21h
+nginx-6fcdc7b59f-gx2tk   1/1     Running            0          24s
+nginx-alpine-volume      2/2     Running            0          20h
+node-55f9b5cd69-mnp7w    1/1     Running            0          24s
+redis-7d7fd78c88-vcm9w   1/1     Running            0          24s
+^CMACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k logs nginx-6fcdc7b59f-gx2tk 
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k logs nginx-6fcdc7b59f-gx2tk -p
+Error from server (BadRequest): previous terminated container "nginx" in pod "nginx-6fcdc7b59f-gx2tk" not found
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k logs node-55f9b5cd69-mnp7w 
+
+                        -------------
+
+__/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
+ _\/\\\/////////\\\_\/\\\\\\________/\\\\\\__/\\\///////\\\___
+  _\/\\\_______\/\\\_\/\\\//\\\____/\\\//\\\_\///______\//\\\__
+   _\/\\\\\\\\\\\\\/__\/\\\\///\\\/\\\/_\/\\\___________/\\\/___
+    _\/\\\/////////____\/\\\__\///\\\/___\/\\\________/\\\//_____
+     _\/\\\_____________\/\\\____\///_____\/\\\_____/\\\//________
+      _\/\\\_____________\/\\\_____________\/\\\___/\\\/___________
+       _\/\\\_____________\/\\\_____________\/\\\__/\\\\\\\\\\\\\\\_
+        _\///______________\///______________\///__\///////////////__
+
+
+                          Runtime Edition
+
+        PM2 is a Production Process Manager for Node.js applications
+                     with a built-in Load Balancer.
+
+                Start and Daemonize any application:
+                $ pm2 start app.js
+
+                Load Balance 4 instances of api.js:
+                $ pm2 start api.js -i 4
+
+                Monitor in production:
+                $ pm2 monitor
+
+                Make pm2 auto-boot at server restart:
+                $ pm2 startup
+
+                To go further checkout:
+                http://pm2.io/
+
+
+                        -------------
+
+pm2 launched in no-daemon mode (you can add DEBUG="*" env variable to get more messages)
+2019-10-14T10:18:58: PM2 log: Launching in no daemon mode
+2019-10-14T10:18:58: PM2 log: [PM2] Starting /var/www/codewithdan/server.js in fork_mode (1 instance)
+2019-10-14T10:18:58: PM2 log: [Watch] Start watching codewithdan
+2019-10-14T10:18:58: PM2 log: App [codewithdan:0] starting in -fork mode-
+2019-10-14T10:18:58: PM2 log: App [codewithdan:0] online
+2019-10-14T10:18:58: PM2 log: [PM2] Done.
+2019-10-14T10:18:58: PM2 log: ┌────┬─────────────────────────┬─────────┬─────────┬──────────┬────────┬──────┬──────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                    │ version │ mode    │ pid      │ uptime │ ↺    │ status   │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────────────┼─────────┼─────────┼──────────┼────────┼──────┼──────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ codewithdan             │ 1.0.0   │ fork    │ 48       │ 0s     │ 0    │ online   │ 0%       │ 32.8mb   │ root     │ enabled  │
+└────┴─────────────────────────┴─────────┴─────────┴──────────┴────────┴──────┴──────────┴──────────┴──────────┴──────────┴──────────┘
+2019-10-14T10:18:58: PM2 log: host metrics | cpu: 55.3% | mem: 34.8% | net: 0ms ⇓ 0mb/s ⇑ 0mb/s | disk: ⇓ 0mb/s ⇑ 0mb/s |
+2019-10-14T10:18:58: PM2 log: [--no-daemon] Continue to stream logs
+2019-10-14T10:18:58: PM2 log: [--no-daemon] Exit on target PM2 exit pid=1
+10:18:59 0|codewithdan  | Created route: /about for controllers/about/about.controller.js
+10:18:59 0|codewithdan  | Created route: / for controllers/home.controller.js
+10:18:59 0|codewithdan  | [production] Listening on http://localhost:8080
+10:19:04 0|codewithdan  | Trying to connect to mongo-2/codeWithDan MongoDB database
+10:19:04 0|codewithdan  | (node:48) DeprecationWarning: current URL string parser is deprecated, and will be removed in a future version. To use the new parser, pass option { useNewUrlParser: true } to MongoClient.connect.
+10:19:34 0|codewithdan  | Connection error:  MongoNetworkError: failed to connect to server [mongo-2:27017] on first connect [MongoNetworkError: connection timed out
+10:19:34 0|codewithdan  |     at connectionFailureError (/var/www/codewithdan/node_modules/mongodb-core/lib/connection/connect.js:362:14)
+10:19:34 0|codewithdan  |     at Socket.<anonymous> (/var/www/codewithdan/node_modules/mongodb-core/lib/connection/connect.js:286:16)
+10:19:34 0|codewithdan  |     at Object.onceWrapper (events.js:299:28)
+10:19:34 0|codewithdan  |     at Socket.emit (events.js:210:5)
+10:19:34 0|codewithdan  |     at Socket._onTimeout (net.js:468:8)
+10:19:34 0|codewithdan  |     at listOnTimeout (internal/timers.js:531:17)
+10:19:34 0|codewithdan  |     at processTimers (internal/timers.js:475:7) {
+10:19:34 0|codewithdan  |   name: 'MongoNetworkError',
+10:19:34 0|codewithdan  |   errorLabels: [Array],
+10:19:34 0|codewithdan  |   [Symbol(mongoErrorContextSymbol)]: {}
+10:19:34 0|codewithdan  | }]
+10:19:34 0|codewithdan  |     at Pool.<anonymous> (/var/www/codewithdan/node_modules/mongodb-core/lib/topologies/server.js:431:11)
+10:19:34 0|codewithdan  |     at Pool.emit (events.js:210:5)
+10:19:34 0|codewithdan  |     at /var/www/codewithdan/node_modules/mongodb-core/lib/connection/pool.js:557:14
+10:19:34 0|codewithdan  |     at /var/www/codewithdan/node_modules/mongodb-core/lib/connection/connect.js:39:11
+10:19:34 0|codewithdan  |     at callback (/var/www/codewithdan/node_modules/mongodb-core/lib/connection/connect.js:261:5)
+10:19:34 0|codewithdan  |     at Socket.<anonymous> (/var/www/codewithdan/node_modules/mongodb-core/lib/connection/connect.js:286:7)
+10:19:34 0|codewithdan  |     at Object.onceWrapper (events.js:299:28)
+10:19:34 0|codewithdan  |     at Socket.emit (events.js:210:5)
+10:19:34 0|codewithdan  |     at Socket._onTimeout (net.js:468:8)
+10:19:34 0|codewithdan  |     at listOnTimeout (internal/timers.js:531:17)
+10:19:34 0|codewithdan  |     at processTimers (internal/timers.js:475:7) {
+10:19:34 0|codewithdan  |   name: 'MongoNetworkError',
+10:19:34 0|codewithdan  |   errorLabels: [ 'TransientTransactionError' ],
+10:19:34 0|codewithdan  |   [Symbol(mongoErrorContextSymbol)]: {}
+10:19:34 0|codewithdan  | }
+10:19:38 0|codewithdan  | (node:48) [DEP0066] DeprecationWarning: OutgoingMessage.prototype._headers is deprecated
+10:19:39 0|codewithdan  | ****** Trying connect again. Tried 0 times ******
+10:20:09 0|codewithdan  | Connection error:  MongoNetworkError: failed to connect to server [mongo-2:27017] on first connect [MongoNetworkError: connection timed out
+10:20:09 0|codewithdan  |     at connectionFailureError (/var/www/codewithdan/node_modules/mongodb-core/lib/connection/connect.js:362:14)
+10:20:09 0|codewithdan  |     at Socket.<anonymous> (/var/www/codewithdan/node_modules/mongodb-core/lib/connection/connect.js:286:16)
+10:20:09 0|codewithdan  |     at Object.onceWrapper (events.js:299:28)
+10:20:09 0|codewithdan  |     at Socket.emit (events.js:210:5)
+10:20:09 0|codewithdan  |     at Socket._onTimeout (net.js:468:8)
+10:20:09 0|codewithdan  |     at listOnTimeout (internal/timers.js:531:17)
+10:20:09 0|codewithdan  |     at processTimers (internal/timers.js:475:7) {
+10:20:09 0|codewithdan  |   name: 'MongoNetworkError',
+10:20:09 0|codewithdan  |   errorLabels: [Array],
+10:20:09 0|codewithdan  |   [Symbol(mongoErrorContextSymbol)]: {}
+10:20:09 0|codewithdan  | }]
+10:20:09 0|codewithdan  |     at Pool.<anonymous> (/var/www/codewithdan/node_modules/mongodb-core/lib/topologies/server.js:431:11)
+10:20:09 0|codewithdan  |     at Pool.emit (events.js:210:5)
+10:20:09 0|codewithdan  |     at /var/www/codewithdan/node_modules/mongodb-core/lib/connection/pool.js:557:14
+10:20:09 0|codewithdan  |     at /var/www/codewithdan/node_modules/mongodb-core/lib/connection/connect.js:39:11
+10:20:09 0|codewithdan  |     at callback (/var/www/codewithdan/node_modules/mongodb-core/lib/connection/connect.js:261:5)
+10:20:09 0|codewithdan  |     at Socket.<anonymous> (/var/www/codewithdan/node_modules/mongodb-core/lib/connection/connect.js:286:7)
+10:20:09 0|codewithdan  |     at Object.onceWrapper (events.js:299:28)
+10:20:09 0|codewithdan  |     at Socket.emit (events.js:210:5)
+10:20:09 0|codewithdan  |     at Socket._onTimeout (net.js:468:8)
+10:20:09 0|codewithdan  |     at listOnTimeout (internal/timers.js:531:17)
+10:20:09 0|codewithdan  |     at processTimers (internal/timers.js:475:7) {
+10:20:09 0|codewithdan  |   name: 'MongoNetworkError',
+10:20:09 0|codewithdan  |   errorLabels: [ 'TransientTransactionError' ],
+10:20:09 0|codewithdan  |   [Symbol(mongoErrorContextSymbol)]: {}
+10:20:09 0|codewithdan  | }
+10:20:14 0|codewithdan  | ****** Trying connect again. Tried 1 times ******
+10:20:35 0|codewithdan  | GET / - - ms - -
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k logs mongo-0
+Running entrypoint.sh
+Scheduling backup CRON job for 13:00
+no crontab for root
+Scheduling backup CRON job for 1:00
+Running first_run.sh
+Starting MongoDB to add users and roles....
+nc: connect to localhost port 27017 (tcp) failed: Connection refused
+nc: connect to localhost port 27017 (tcp) failed: Cannot assign requested address
+2019-10-14T10:19:37.701+0000 I  CONTROL  [main] Automatically disabling TLS 1.0, to force-enable TLS 1.0 specify --sslDisabledProtocols 'none'
+2019-10-14T10:19:37.705+0000 I  CONTROL  [initandlisten] MongoDB starting : pid=19 port=27017 dbpath=/data/db 64-bit host=mongo-0
+2019-10-14T10:19:37.705+0000 I  CONTROL  [initandlisten] db version v4.2.0
+2019-10-14T10:19:37.705+0000 I  CONTROL  [initandlisten] git version: a4b751dcf51dd249c5865812b390cfd1c0129c30
+2019-10-14T10:19:37.705+0000 I  CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.1.1  11 Sep 2018
+2019-10-14T10:19:37.705+0000 I  CONTROL  [initandlisten] allocator: tcmalloc
+2019-10-14T10:19:37.705+0000 I  CONTROL  [initandlisten] modules: none
+2019-10-14T10:19:37.705+0000 I  CONTROL  [initandlisten] build environment:
+2019-10-14T10:19:37.705+0000 I  CONTROL  [initandlisten]     distmod: ubuntu1804
+2019-10-14T10:19:37.705+0000 I  CONTROL  [initandlisten]     distarch: x86_64
+2019-10-14T10:19:37.705+0000 I  CONTROL  [initandlisten]     target_arch: x86_64
+2019-10-14T10:19:37.705+0000 I  CONTROL  [initandlisten] options: {}
+2019-10-14T10:19:37.707+0000 I  STORAGE  [initandlisten] 
+2019-10-14T10:19:37.707+0000 I  STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2019-10-14T10:19:37.707+0000 I  STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2019-10-14T10:19:37.707+0000 I  STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=487M,cache_overflow=(file_max=0M),session_max=33000,eviction=(threads_min=4,threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),statistics_log=(wait=0),verbose=[recovery_progress,checkpoint_progress],
+2019-10-14T10:19:38.326+0000 I  STORAGE  [initandlisten] WiredTiger message [1571048378:326014][19:0x7fc972ac5b00], txn-recover: Set global recovery timestamp: (0,0)
+2019-10-14T10:19:38.333+0000 I  RECOVERY [initandlisten] WiredTiger recoveryTimestamp. Ts: Timestamp(0, 0)
+2019-10-14T10:19:38.342+0000 I  STORAGE  [initandlisten] Timestamp monitor starting
+2019-10-14T10:19:38.344+0000 I  CONTROL  [initandlisten] 
+2019-10-14T10:19:38.345+0000 I  CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2019-10-14T10:19:38.345+0000 I  CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2019-10-14T10:19:38.345+0000 I  CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2019-10-14T10:19:38.345+0000 I  CONTROL  [initandlisten] 
+2019-10-14T10:19:38.345+0000 I  CONTROL  [initandlisten] ** WARNING: This server is bound to localhost.
+2019-10-14T10:19:38.345+0000 I  CONTROL  [initandlisten] **          Remote systems will be unable to connect to this server. 
+2019-10-14T10:19:38.345+0000 I  CONTROL  [initandlisten] **          Start the server with --bind_ip <address> to specify which IP 
+2019-10-14T10:19:38.345+0000 I  CONTROL  [initandlisten] **          addresses it should serve responses from, or with --bind_ip_all to
+2019-10-14T10:19:38.345+0000 I  CONTROL  [initandlisten] **          bind to all interfaces. If this behavior is desired, start the
+2019-10-14T10:19:38.345+0000 I  CONTROL  [initandlisten] **          server with --bind_ip 127.0.0.1 to disable this warning.
+2019-10-14T10:19:38.345+0000 I  CONTROL  [initandlisten] 
+2019-10-14T10:19:38.345+0000 I  STORAGE  [initandlisten] createCollection: admin.system.version with provided UUID: b37a553a-797b-408a-a89a-d39956c87831 and options: { uuid: UUID("b37a553a-797b-408a-a89a-d39956c87831") }
+2019-10-14T10:19:38.354+0000 I  INDEX    [initandlisten] index build: done building index _id_ on ns admin.system.version
+2019-10-14T10:19:38.354+0000 I  SHARDING [initandlisten] Marking collection admin.system.version as collection version: <unsharded>
+2019-10-14T10:19:38.354+0000 I  COMMAND  [initandlisten] setting featureCompatibilityVersion to 4.2
+2019-10-14T10:19:38.360+0000 I  SHARDING [initandlisten] Marking collection local.system.replset as collection version: <unsharded>
+2019-10-14T10:19:38.360+0000 I  STORAGE  [initandlisten] Flow Control is enabled on this deployment.
+2019-10-14T10:19:38.360+0000 I  SHARDING [initandlisten] Marking collection admin.system.roles as collection version: <unsharded>
+2019-10-14T10:19:38.361+0000 I  STORAGE  [initandlisten] createCollection: local.startup_log with generated UUID: 2f0ebc4a-81c7-48e3-b2aa-64fa97c86eff and options: { capped: true, size: 10485760 }
+2019-10-14T10:19:38.371+0000 I  INDEX    [initandlisten] index build: done building index _id_ on ns local.startup_log
+2019-10-14T10:19:38.371+0000 I  SHARDING [initandlisten] Marking collection local.startup_log as collection version: <unsharded>
+2019-10-14T10:19:38.372+0000 I  FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/db/diagnostic.data'
+2019-10-14T10:19:38.373+0000 I  SHARDING [LogicalSessionCacheRefresh] Marking collection config.system.sessions as collection version: <unsharded>
+2019-10-14T10:19:38.374+0000 I  NETWORK  [initandlisten] Listening on /tmp/mongodb-27017.sock
+2019-10-14T10:19:38.374+0000 I  NETWORK  [initandlisten] Listening on 127.0.0.1
+2019-10-14T10:19:38.374+0000 I  NETWORK  [initandlisten] waiting for connections on port 27017
+2019-10-14T10:19:38.385+0000 I  STORAGE  [LogicalSessionCacheRefresh] createCollection: config.system.sessions with provided UUID: 87026ccf-60ea-4a6e-b7a0-bee2c7001ecd and options: { uuid: UUID("87026ccf-60ea-4a6e-b7a0-bee2c7001ecd") }
+2019-10-14T10:19:38.386+0000 I  CONTROL  [LogicalSessionCacheReap] Sessions collection is not set up; waiting until next sessions reap interval: config.system.sessions does not exist
+2019-10-14T10:19:38.395+0000 I  INDEX    [LogicalSessionCacheRefresh] index build: done building index _id_ on ns config.system.sessions
+2019-10-14T10:19:38.407+0000 I  INDEX    [LogicalSessionCacheRefresh] index build: starting on config.system.sessions properties: { v: 2, key: { lastUse: 1 }, name: "lsidTTLIndex", ns: "config.system.sessions", expireAfterSeconds: 1800 } using method: Hybrid
+2019-10-14T10:19:38.407+0000 I  INDEX    [LogicalSessionCacheRefresh] build may temporarily use up to 500 megabytes of RAM
+2019-10-14T10:19:38.407+0000 I  INDEX    [LogicalSessionCacheRefresh] index build: collection scan done. scanned 0 total records in 0 seconds
+2019-10-14T10:19:38.408+0000 I  INDEX    [LogicalSessionCacheRefresh] index build: inserted 0 keys from external sorter into index in 0 seconds
+2019-10-14T10:19:38.410+0000 I  INDEX    [LogicalSessionCacheRefresh] index build: done building index lsidTTLIndex on ns config.system.sessions
+Connection to localhost 27017 port [tcp/*] succeeded!
+2019-10-14T10:19:38.676+0000 I  NETWORK  [listener] connection accepted from 127.0.0.1:44170 #1 (1 connection now open)
+Creating root user: "dbadmin"...
+2019-10-14T10:19:38.676+0000 I  NETWORK  [conn1] end connection 127.0.0.1:44170 (0 connections now open)
+MongoDB shell version v4.2.0
+connecting to: mongodb://127.0.0.1:27017/admin?compressors=disabled&gssapiServiceName=mongodb
+2019-10-14T10:19:38.757+0000 I  NETWORK  [listener] connection accepted from 127.0.0.1:44172 #2 (1 connection now open)
+2019-10-14T10:19:38.758+0000 I  NETWORK  [conn2] received client metadata from 127.0.0.1:44172 conn2: { application: { name: "MongoDB Shell" }, driver: { name: "MongoDB Internal Client", version: "4.2.0" }, os: { type: "Linux", name: "Ubuntu", architecture: "x86_64", version: "18.04" } }
+Implicit session: session { "id" : UUID("7f65d0fb-7374-422f-9a36-f3847acbb621") }
+MongoDB server version: 4.2.0
+2019-10-14T10:19:38.803+0000 I  SHARDING [conn2] Marking collection admin.system.users as collection version: <unsharded>
+2019-10-14T10:19:38.803+0000 I  STORAGE  [conn2] createCollection: admin.system.users with generated UUID: 23fb11c0-cc76-4736-9228-7252a3d09bea and options: {}
+2019-10-14T10:19:38.813+0000 I  INDEX    [conn2] index build: done building index _id_ on ns admin.system.users
+2019-10-14T10:19:38.818+0000 I  INDEX    [conn2] index build: done building index user_1_db_1 on ns admin.system.users
+Successfully added user: {
+        "user" : "dbadmin",
+        "roles" : [
+                {
+                        "role" : "root",
+                        "db" : "admin"
+                }
+        ]
+}
+2019-10-14T10:19:38.823+0000 I  NETWORK  [conn2] end connection 127.0.0.1:44172 (0 connections now open)
+Creating web user: "webrole"...
+MongoDB shell version v4.2.0
+connecting to: mongodb://127.0.0.1:27017/codeWithDan?compressors=disabled&gssapiServiceName=mongodb
+2019-10-14T10:19:38.884+0000 I  NETWORK  [listener] connection accepted from 127.0.0.1:44178 #3 (1 connection now open)
+2019-10-14T10:19:38.884+0000 I  NETWORK  [conn3] received client metadata from 127.0.0.1:44178 conn3: { application: { name: "MongoDB Shell" }, driver: { name: "MongoDB Internal Client", version: "4.2.0" }, os: { type: "Linux", name: "Ubuntu", architecture: "x86_64", version: "18.04" } }
+Implicit session: session { "id" : UUID("751869b0-cb0b-4a83-bd19-7182d08346d7") }
+MongoDB server version: 4.2.0
+Successfully added user: {
+        "user" : "webrole",
+        "roles" : [
+                {
+                        "role" : "readWrite",
+                        "db" : "codeWithDan"
+                }
+        ]
+}
+2019-10-14T10:19:38.927+0000 I  NETWORK  [conn3] end connection 127.0.0.1:44178 (0 connections now open)
+Added MongoDB users and roles....
+Shutting down MongoDB after adding users/roles....
+2019-10-14T10:19:38.963+0000 I  CONTROL  [main] Automatically disabling TLS 1.0, to force-enable TLS 1.0 specify --sslDisabledProtocols 'none'
+killing process with pid: 19
+2019-10-14T10:19:38.966+0000 I  CONTROL  [signalProcessingThread] got signal 15 (Terminated), will terminate after current cmd ends
+2019-10-14T10:19:38.969+0000 I  NETWORK  [signalProcessingThread] shutdown: going to close listening sockets...
+2019-10-14T10:19:38.969+0000 I  NETWORK  [signalProcessingThread] removing socket file: /tmp/mongodb-27017.sock
+2019-10-14T10:19:38.971+0000 I  -        [signalProcessingThread] Stopping further Flow Control ticket acquisitions.
+2019-10-14T10:19:38.972+0000 I  CONTROL  [signalProcessingThread] Shutting down free monitoring
+2019-10-14T10:19:38.972+0000 I  FTDC     [signalProcessingThread] Shutting down full-time diagnostic data capture
+2019-10-14T10:19:38.972+0000 I  STORAGE  [signalProcessingThread] Deregistering all the collections
+2019-10-14T10:19:38.972+0000 I  STORAGE  [signalProcessingThread] Timestamp monitor shutting down
+2019-10-14T10:19:38.973+0000 I  STORAGE  [signalProcessingThread] WiredTigerKVEngine shutting down
+2019-10-14T10:19:38.973+0000 I  STORAGE  [signalProcessingThread] Shutting down session sweeper thread
+2019-10-14T10:19:38.974+0000 I  STORAGE  [signalProcessingThread] Finished shutting down session sweeper thread
+2019-10-14T10:19:38.974+0000 I  STORAGE  [signalProcessingThread] Shutting down journal flusher thread
+2019-10-14T10:19:39.040+0000 I  STORAGE  [signalProcessingThread] Finished shutting down journal flusher thread
+2019-10-14T10:19:39.040+0000 I  STORAGE  [signalProcessingThread] Shutting down checkpoint thread
+2019-10-14T10:19:39.040+0000 I  STORAGE  [signalProcessingThread] Finished shutting down checkpoint thread
+2019-10-14T10:19:39.093+0000 I  STORAGE  [signalProcessingThread] shutdown: removing fs lock...
+2019-10-14T10:19:39.095+0000 I  CONTROL  [signalProcessingThread] now exiting
+2019-10-14T10:19:39.095+0000 I  CONTROL  [signalProcessingThread] shutting down with code:0
+========================================================================
+MongoDB Root User: dbadmin
+MongoDB Root Role: root
+========================================================================
+========================================================================
+MongoDB User: webrole
+MongoDB Database: codeWithDan
+MongoDB Role: readWrite
+Starting MongoDB...
+2019-10-14T10:19:39.995+0000 I  CONTROL  [main] Automatically disabling TLS 1.0, to force-enable TLS 1.0 specify --sslDisabledProtocols 'none'
+2019-10-14T10:19:39.998+0000 I  CONTROL  [initandlisten] MongoDB starting : pid=68 port=27017 dbpath=/data/db 64-bit host=mongo-0
+2019-10-14T10:19:39.998+0000 I  CONTROL  [initandlisten] db version v4.2.0
+2019-10-14T10:19:39.999+0000 I  CONTROL  [initandlisten] git version: a4b751dcf51dd249c5865812b390cfd1c0129c30
+2019-10-14T10:19:39.999+0000 I  CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.1.1  11 Sep 2018
+2019-10-14T10:19:39.999+0000 I  CONTROL  [initandlisten] allocator: tcmalloc
+2019-10-14T10:19:39.999+0000 I  CONTROL  [initandlisten] modules: none
+2019-10-14T10:19:39.999+0000 I  CONTROL  [initandlisten] build environment:
+2019-10-14T10:19:39.999+0000 I  CONTROL  [initandlisten]     distmod: ubuntu1804
+2019-10-14T10:19:39.999+0000 I  CONTROL  [initandlisten]     distarch: x86_64
+2019-10-14T10:19:39.999+0000 I  CONTROL  [initandlisten]     target_arch: x86_64
+2019-10-14T10:19:39.999+0000 I  CONTROL  [initandlisten] options: { net: { bindIp: "*" }, security: { authorization: "enabled" } }
+2019-10-14T10:19:40.000+0000 I  STORAGE  [initandlisten] Detected data files in /data/db created by the 'wiredTiger' storage engine, so setting the active storage engine to 'wiredTiger'.
+2019-10-14T10:19:40.000+0000 I  STORAGE  [initandlisten] 
+2019-10-14T10:19:40.000+0000 I  STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2019-10-14T10:19:40.000+0000 I  STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2019-10-14T10:19:40.000+0000 I  STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=487M,cache_overflow=(file_max=0M),session_max=33000,eviction=(threads_min=4,threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),statistics_log=(wait=0),verbose=[recovery_progress,checkpoint_progress],
+2019-10-14T10:19:40.548+0000 I  STORAGE  [initandlisten] WiredTiger message [1571048380:548655][68:0x7f5510e27b00], txn-recover: Recovering log 1 through 2
+2019-10-14T10:19:40.611+0000 I  STORAGE  [initandlisten] WiredTiger message [1571048380:611576][68:0x7f5510e27b00], txn-recover: Recovering log 2 through 2
+2019-10-14T10:19:40.665+0000 I  STORAGE  [initandlisten] WiredTiger message [1571048380:665734][68:0x7f5510e27b00], txn-recover: Main recovery loop: starting at 1/29056 to 2/256
+2019-10-14T10:19:40.752+0000 I  STORAGE  [initandlisten] WiredTiger message [1571048380:752515][68:0x7f5510e27b00], txn-recover: Recovering log 1 through 2
+2019-10-14T10:19:40.816+0000 I  STORAGE  [initandlisten] WiredTiger message [1571048380:816229][68:0x7f5510e27b00], txn-recover: Recovering log 2 through 2
+2019-10-14T10:19:40.857+0000 I  STORAGE  [initandlisten] WiredTiger message [1571048380:857294][68:0x7f5510e27b00], txn-recover: Set global recovery timestamp: (0,0)
+2019-10-14T10:19:40.872+0000 I  RECOVERY [initandlisten] WiredTiger recoveryTimestamp. Ts: Timestamp(0, 0)
+2019-10-14T10:19:40.881+0000 I  STORAGE  [initandlisten] Timestamp monitor starting
+2019-10-14T10:19:40.883+0000 I  CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2019-10-14T10:19:40.883+0000 I  CONTROL  [initandlisten] 
+2019-10-14T10:19:40.907+0000 I  SHARDING [initandlisten] Marking collection local.system.replset as collection version: <unsharded>
+2019-10-14T10:19:40.908+0000 I  STORAGE  [initandlisten] Flow Control is enabled on this deployment.
+2019-10-14T10:19:40.908+0000 I  SHARDING [initandlisten] Marking collection admin.system.roles as collection version: <unsharded>
+2019-10-14T10:19:40.908+0000 I  SHARDING [initandlisten] Marking collection admin.system.version as collection version: <unsharded>
+2019-10-14T10:19:40.909+0000 I  SHARDING [initandlisten] Marking collection local.startup_log as collection version: <unsharded>
+2019-10-14T10:19:40.909+0000 I  FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/db/diagnostic.data'
+2019-10-14T10:19:40.911+0000 I  SHARDING [LogicalSessionCacheRefresh] Marking collection config.system.sessions as collection version: <unsharded>
+2019-10-14T10:19:40.911+0000 I  NETWORK  [initandlisten] Listening on /tmp/mongodb-27017.sock
+2019-10-14T10:19:40.911+0000 I  NETWORK  [initandlisten] Listening on 0.0.0.0
+2019-10-14T10:19:40.912+0000 I  NETWORK  [initandlisten] waiting for connections on port 27017
+2019-10-14T10:19:40.912+0000 I  SHARDING [LogicalSessionCacheReap] Marking collection config.transactions as collection version: <unsharded>
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k logs nginx-6fcdc7b59f-gx2tk
+2019/10/14 10:20:35 [error] 6#6: *2 upstream timed out (110: Operation timed out) while reading response header from upstream, client: 192.168.65.3, server: localhost, request: "GET / HTTP/1.1", upstream: "http://10.102.197.62:8080/", host: "localhost"
+192.168.65.3 - - [14/Oct/2019:10:20:35 +0000] "GET / HTTP/1.1" 504 569 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ docker-compose build
+Building mongo
+Step 1/8 : FROM mongo
+ ---> 58477a771fb4
+Step 2/8 : LABEL author="Dan Wahlin"
+ ---> Using cache
+ ---> 095933109147
+Step 3/8 : RUN apt-get update && apt-get install -y cron netcat-traditional netcat-openbsd
+ ---> Using cache
+ ---> e046ec2523ec
+Step 4/8 : COPY ./.docker/mongo_scripts /mongo_scripts
+ ---> Using cache
+ ---> 3ebf3a5283bc
+Step 5/8 : RUN chmod +rx /mongo_scripts/*.sh
+ ---> Using cache
+ ---> dbcde3704f19
+Step 6/8 : RUN touch /.firstrun
+ ---> Using cache
+ ---> c76fe19a05d0
+Step 7/8 : EXPOSE 27017
+ ---> Using cache
+ ---> 7fdc7b8166e7
+Step 8/8 : ENTRYPOINT ["/mongo_scripts/run.sh"]
+ ---> Using cache
+ ---> 58956b833f4d
+
+Successfully built 58956b833f4d
+Successfully tagged codewithdan/mongo:latest
+Building redis
+Step 1/5 : FROM                 redis:latest
+ ---> 01a52b3b5cd1
+Step 2/5 : LABEL       author="Dan Wahlin"
+ ---> Using cache
+ ---> 633eaf6191ca
+Step 3/5 : COPY        ./.docker/config/redis.production.conf /etc/redis.conf
+ ---> Using cache
+ ---> eb34febe6d0c
+Step 4/5 : EXPOSE      6379
+ ---> Using cache
+ ---> 8462b8ebba61
+Step 5/5 : ENTRYPOINT  ["redis-server", "/etc/redis.conf"]
+ ---> Using cache
+ ---> 15c27c52eb83
+
+Successfully built 15c27c52eb83
+Successfully tagged codewithdan/redis:latest
+Building node
+Step 1/12 : FROM node:alpine
+ ---> 4c6406de22fd
+Step 2/12 : LABEL author="Dan Wahlin"
+ ---> Using cache
+ ---> ea69966192b4
+Step 3/12 : WORKDIR /var/www/codewithdan
+ ---> Using cache
+ ---> 74a47b00bb44
+Step 4/12 : COPY ./package.json .
+ ---> Using cache
+ ---> ee8a586e689e
+Step 5/12 : COPY ./package-lock.json .
+ ---> Using cache
+ ---> d888513ed69d
+Step 6/12 : ENV NODE_ENV production
+ ---> Using cache
+ ---> e2312609839c
+Step 7/12 : RUN npm install -g pm2@latest
+ ---> Using cache
+ ---> 40eb54c69ba6
+Step 8/12 : RUN npm install
+ ---> Using cache
+ ---> bb68723144b1
+Step 9/12 : COPY    . .
+ ---> Using cache
+ ---> 75564781794c
+Step 10/12 : RUN mkdir -p /var/log/pm2
+ ---> Using cache
+ ---> d2b7bc965caa
+Step 11/12 : EXPOSE             8080
+ ---> Using cache
+ ---> e2f6315c02bc
+Step 12/12 : ENTRYPOINT ["pm2", "start", "server.js","--name","codewithdan","--log","/var/log/pm2/pm2.log","--watch","--no-daemon"]
+ ---> Using cache
+ ---> ff8f9cd54817
+
+Successfully built ff8f9cd54817
+Successfully tagged codewithdan/node-codewithdan:latest
+Building nginx
+Step 1/12 : FROM nginx:alpine
+ ---> 4d3c246dfef2
+Step 2/12 : LABEL author="Dan Wahlin"
+ ---> Using cache
+ ---> d753c92405dd
+Step 3/12 : VOLUME /var/cache/nginx
+ ---> Using cache
+ ---> 36b60962dd03
+Step 4/12 : COPY ./.docker/config/nginx.production.conf /etc/nginx/nginx.conf
+ ---> Using cache
+ ---> 7e1b5611ce54
+Step 5/12 : COPY ./public /var/www/public
+ ---> Using cache
+ ---> c79ff4a3c60c
+Step 6/12 : COPY ./.certs/server.crt    /etc/nginx/server.crt
+ ---> Using cache
+ ---> a3fb8ca0169a
+Step 7/12 : COPY ./.certs/server.key    /etc/nginx/server.key
+ ---> Using cache
+ ---> 1df16c039227
+Step 8/12 : COPY ./.certs/dhparam.pem   /etc/nginx/dhparam.pem
+ ---> Using cache
+ ---> 54974a46023c
+Step 9/12 : RUN chmod 600 /etc/nginx/server.key
+ ---> Using cache
+ ---> 52dc23303b54
+Step 10/12 : EXPOSE 80 443
+ ---> Using cache
+ ---> 1aa9ba49f994
+Step 11/12 : ENTRYPOINT ["nginx"]
+ ---> Using cache
+ ---> c24a36bfb249
+Step 12/12 : CMD ["-g", "daemon off;"]
+ ---> Using cache
+ ---> bdf1a8e71956
+
+Successfully built bdf1a8e71956
+Successfully tagged codewithdan/nginx:latest
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k delete -f .k8s
+configmap "mongo-env" deleted
+storageclass.storage.k8s.io "local-storage" deleted
+persistentvolume "mongo-pv" deleted
+persistentvolumeclaim "mongo-pvc" deleted
+statefulset.apps "mongo" deleted
+service "mongo" deleted
+deployment.apps "nginx" deleted
+service "nginx" deleted
+configmap "node-env" deleted
+deployment.apps "node" deleted
+service "node" deleted
+deployment.apps "redis" deleted
+service "redis" deleted
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k apply -f .k8s
+configmap/mongo-env created
+storageclass.storage.k8s.io/local-storage created
+persistentvolume/mongo-pv created
+persistentvolumeclaim/mongo-pvc created
+statefulset.apps/mongo created
+service/mongo created
+deployment.apps/nginx created
+service/nginx created
+configmap/node-env created
+deployment.apps/node created
+service/node created
+deployment.apps/redis created
+service/redis created
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k get pods --watch
+NAME                     READY   STATUS             RESTARTS   AGE
+docker-volume            1/1     Running            1          20h
+mongo-0                  1/1     Terminating        0          3m53s
+my-busy-box              0/1     CrashLoopBackOff   193        4d21h
+nginx-6fcdc7b59f-zjg22   1/1     Running            0          8s
+nginx-alpine-volume      2/2     Running            0          20h
+node-55f9b5cd69-mnp7w    1/1     Terminating        0          4m34s
+node-55f9b5cd69-mx7s6    1/1     Running            0          7s
+redis-7d7fd78c88-rzpqr   1/1     Running            0          7s
+^CMACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k get pods --watch
+NAME                     READY   STATUS             RESTARTS   AGE
+docker-volume            1/1     Running            1          20h
+mongo-0                  0/1     Terminating        0          4m11s
+my-busy-box              0/1     CrashLoopBackOff   193        4d21h
+nginx-6fcdc7b59f-zjg22   1/1     Running            0          26s
+nginx-alpine-volume      2/2     Running            0          20h
+node-55f9b5cd69-mnp7w    0/1     Terminating        0          4m52s
+node-55f9b5cd69-mx7s6    1/1     Running            0          25s
+redis-7d7fd78c88-rzpqr   1/1     Running            0          25s
+node-55f9b5cd69-mnp7w    0/1     Terminating        0          4m55s
+node-55f9b5cd69-mnp7w    0/1     Terminating        0          4m55s
+mongo-0                  0/1     Terminating        0          4m14s
+mongo-0                  0/1     Terminating        0          4m14s
+mongo-0                  0/1     Pending            0          0s
+mongo-0                  0/1     Pending            0          0s
+mongo-0                  0/1     ContainerCreating   0          0s
+mongo-0                  1/1     Running             0          3s
+^CMACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ curl localhost
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Code with Dan</title>
+</head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Code with Dan - JavaScript, Angular, Node.js, ASP.NET, C#, HTML5 training videos and classes.">
+    <meta property="og:image" content="http://www.codewithdan.com/img/codeWithDanLogo.png" />
+    <meta property="og:title" content="Code with Dan" />
+    <meta property="og:description" content="Code with Dan: The best way to learn development and programming technologies and concepts!"/>
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css'>
+    <!--<link href='//fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>-->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet" type="text/css" />
+    
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+</head>
+<body>
+    <header class="navbar navbar-default navbar-fixed-top" role="navigation">
+         <div class="top-bar">
+            <div class="container-fluid">
+                <div class="wrapper"></div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <nav class="wrapper">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-xs-12">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <div>
+                                <a class="navbar-brand" href="/">
+                                    <img src="/img/codeWithDanLogo.png" alt="Code with Dan Logo" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9 col-md-9 col-xs-12">
+                        <div class="collapse navbar-collapse" id="menu-collapse">
+                            <div class="position-nav-links">
+                                <div class="row top-navbar">
+                                    <div class="col-md-12">
+                                        <ul class="nav navbar-nav navbar-right">
+                                                <li>
+                                                    <a href="/register">Create an Account</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/login">Login</a>
+                                                </li>
+                                            <li>
+                                                <a href="/cart">
+                                                    <span class="fa fa-shopping-cart green"></span>&nbsp;&nbsp;
+                                                    <span class="cartTotal green">$0.00</span>&nbsp;&nbsp;
+                                                    <span class="green">Cart</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="row bottom-navbar">
+                                    <div class="col-md-12">
+                                        <ul class="nav navbar-nav navbar-right">
+                                                <li><a href="/products/Courseware">Courseware</a></li>
+                                                <li><a href="/products/Training">Training</a></li>
+                                                <li><a href="/products/Videos">Videos</a></li>
+                                            <li><a href="//blog.codewithdan.com">Blog</a></li>
+                                            <li>
+                                                <div class="search-container">
+                                                    <input type="text" placeholder="Search" id="searchText" class="search-box" value="" />
+                                                    <button type="submit" id="searchButton" class="btn btn-default search-button">
+                                                        <span class="fa fa-search"></span>
+                                                    </button>
+                                                </div>
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        <section class="section feature-section">
+    <div id="carousel-codewithdan" class="carousel slide" data-ride="carousel" data-interval="15000">
+        <ol class="carousel-indicators">
+                <li data-target="#carousel-codewithdan" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-codewithdan" data-slide-to="1" class=""></li>
+                <li data-target="#carousel-codewithdan" data-slide-to="2" class=""></li>
+                <li data-target="#carousel-codewithdan" data-slide-to="3" class=""></li>
+        </ol>
+
+        <div class="carousel-inner">
+                <section class="item full-width-background active" style="background-image: url(/img/background_girl_1920x500.jpg);">
+                    <div class="wrapper">
+                        <div class="container-fluid">
+                            <div class="row center-block animated fadeInDown">
+                                <div class="col-lg-12 col-md-12 feature-section-content">
+                                    <div class="featured-item">
+                                        <div class="item-name ">Angular JumpStart</div>
+                                        <br />
+                                        <div class="item-summary ">The most productive way to learn Angular! JumpStart your learning with this step-by-step video course!</div>
+                                            <br />
+                                            <div class="item-highlight ">Over 6 hours of content!</div>
+                                        <br /><br />
+                                        <a class="btn btn-primary btn-x-lg" href="/products/training">Get Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="item full-width-background " style="background-image: url(/img/background_singapore_1920x500.jpg);">
+                    <div class="wrapper">
+                        <div class="container-fluid">
+                            <div class="row center-block animated fadeInDown">
+                                <div class="col-lg-12 col-md-12 feature-section-content">
+                                    <div class="featured-item">
+                                        <div class="item-name ">World-Class Onsite Training</div>
+                                        <br />
+                                        <div class="item-summary ">We provide the worlds best hands-on training at your location. Anywhere in the world!</div>
+                                        <br /><br />
+                                        <a class="btn btn-primary btn-x-lg" href="/products/training">Get Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="item full-width-background " style="background-image: url(/img/background_road_1920x500.jpg);">
+                    <div class="wrapper">
+                        <div class="container-fluid">
+                            <div class="row center-block animated fadeInDown">
+                                <div class="col-lg-12 col-md-12 feature-section-content">
+                                    <div class="featured-item">
+                                        <div class="item-name white">Focused Onsite Training</div>
+                                        <br />
+                                        <div class="item-summary white">World-class JavaScript, Angular, Node.js, C#, ASP.NET MVC (and more) training at your location. Whether you're located in the middle of nowhere or in a high-rise corporate building.</div>
+                                        <br /><br />
+                                        <a class="btn btn-primary btn-x-lg" href="/products/training">Get Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="item full-width-background " style="background-image: url(/img/background_man_couch_1920x500.jpg);">
+                    <div class="wrapper">
+                        <div class="container-fluid">
+                            <div class="row center-block animated fadeInDown">
+                                <div class="col-lg-12 col-md-12 feature-section-content">
+                                    <div class="featured-item">
+                                        <div class="item-name ">Angular Custom Directives</div>
+                                        <br />
+                                        <div class="item-summary ">Dive in to Angular and learn how to build custom directives!</div>
+                                            <br />
+                                            <div class="item-highlight ">Advanced Angular Content!</div>
+                                        <br /><br />
+                                        <a class="btn btn-primary btn-x-lg" href="/products/training">Get Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+        </div>
+
+    <!--<a class="left carousel-control" href="#carousel-codewithdan" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#carousel-codewithdan" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>-->
+
+    </div>
+</section>
+
+<section class="section seeit-section">
+    <div class="container-fluid wrapper">
+        <div class="row seeit-section-details">
+            <div class="col-md-4">
+                <section data-sr="wait 1s, ease-in-out 50px">
+                    <header>
+                        <i class="fa fa-lg fa-search orange"></i> see it!
+                    </header>
+                    <br />
+                    <div class="seeit-section-summary">Get focused classroom or video training</div>
+                </section>
+            </div>
+            <div class="col-md-4 remove-col-padding">
+                <section  data-sr="wait 1.5s, ease-in-out 50px">
+                    <header><i class="fa fa-lg fa-bolt yellow"></i> learn it!</header>
+                    <br />
+                    <div class="seeit-section-summary">Learn from industry experts who know how to teach - not just talk</div>
+                </section>
+            </div>
+            <div class="col-md-4">
+                <section  data-sr="wait 2.0s, ease-in-out 50px">
+                    <header><i class="fa fa-lg fa-flask green"></i> code it!</header>
+                    <br />
+                    <div class="seeit-section-summary">Follow along with code recipes, step-by-step videos or hands-on labs</div>
+                </section>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="training-section parallax">
+    <div class="container-fluid wrapper">
+        <div class="section-details">
+            <div class="section-headline" data-sr="enter from the top and hustle 50px over 2.5s">
+                <a href="/products/training">
+                    <i class="fa fa-2x fa-users"></i>&nbsp;&nbsp;
+                    Instructor-Led Training
+                </a>
+            </div>
+            <div class="section-desc" data-sr>
+                Get expert onsite or online instructor-led, hands-on training direct from Dan Wahlin and other industry experts.
+            </div>
+            <div>
+                <a class="btn btn-success btn-x-lg" href="/products/training">View Classes</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="videos-section">
+    <div class="container-fluid wrapper">
+        <div class="section-details">
+            <div class="section-headline" data-sr="enter from the top and hustle 50px over 2.5s">
+                <a href="/products/videos">
+                    <i class="fa fa-2x fa-laptop"></i>&nbsp;&nbsp;
+                    Online Training Videos
+                </a>
+            </div>
+            <div class="section-desc" data-sr>
+                Focused video training that maximizes your learning.
+            </div>
+            <div>
+                <a class="btn btn-success btn-x-lg" href="/products/videos">View Video Courses</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="courseware-section">
+    <div class="container-fluid wrapper">
+        <div class="section-details">
+            <div class="section-headline" data-sr="enter from the top and hustle 50px over 2.5s">
+                <a href="/products/courseware">
+                    <i class="fa fa-2x fa-file-text"></i>&nbsp;&nbsp;
+                    Training Courseware
+                </a>
+            </div>
+            <div class="section-desc" data-sr>
+                Get access to the best courseware in the industry for your own instructor-led classes.
+            </div>
+            <div>
+                <a class="btn btn-success btn-x-lg" href="/products/courseware">View Courseware</a>
+            </div>
+        </div>
+</section>
+
+<script src='/js/libs/scrollReveal.min.js'></script>
+<script>
+    //ScrollReveal
+    window.sr = new scrollReveal();
+</script>
+
+    </main>
+
+    <br /><br />
+
+    <div class="social-section">
+        <div class="container-fluid">
+            <div class="wrapper">
+                <div class="row">
+                    <br />
+                    <div class="col-md-12 center">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={encodedUrl}&amp;t=Check out the great content on the Code with Dan site: {encodedUrl}"
+                            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                            <i class="fa fa-facebook-square social-icon" style="color:#3B5998;"></i></a>&nbsp;&nbsp;
+                        <a href="https://twitter.com/intent/tweet/?url={encodedUrl}&amp;text=Check out the great content on the Code with Dan website!"
+                            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                            <i class="fa fa-twitter-square social-icon" style="color:#00aced;"></i></a>&nbsp;&nbsp;
+                        <a href="https://plus.google.com/share?url={encodedUrl}"
+                            onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                            <i class="fa fa-google-plus-square social-icon" style="color:#dd4b39;"></i></a>&nbsp;&nbsp;
+                        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={encodedUrl}&amp;title=Code With Dan&amp;summary=Code with Dan: Training and Videos&amp;source=Code with Dan"
+                            onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                            <i class="fa fa-linkedin-square social-icon" style="color:#007bb6"></i></a>                    </div>
+                    <br /><br />
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="navbar navbar-inner">
+            <div class="wrapper">
+                <div class="row">
+                    <br />
+                    <div class="col-md-3 padding-footer">
+                        &copy; <span id="year"></span> Wahlin Consulting
+                    </div>
+                    <div class="col-md-9 navbar-collapse navbar-right">
+                        <ul class="nav navbar-nav">
+                            <li><a href="/contact">Contact Us</a></li>
+                            <li><a href="/about">About Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <script src="/js/main.js"></script>
+    <script>
+        codeWithDan.csrf = 'gU51mXUS-lP-0uab9-CzEmJhOxf82FmXIwsw';
+
+        document.getElementById('year').innerHTML = new Date().getFullYear();
+    </script>
+
+    
+
+</body>
+</html>MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ 

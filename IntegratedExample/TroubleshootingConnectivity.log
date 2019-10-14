@@ -1,0 +1,400 @@
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k get all
+NAME                         READY   STATUS             RESTARTS   AGE
+pod/docker-volume            1/1     Running            1          20h
+pod/mongo-0                  1/1     Running            0          97s
+pod/my-busy-box              0/1     CrashLoopBackOff   193        4d21h
+pod/nginx-6fcdc7b59f-zjg22   1/1     Running            0          2m21s
+pod/nginx-alpine-volume      2/2     Running            0          20h
+pod/node-55f9b5cd69-mx7s6    1/1     Running            0          2m20s
+pod/redis-7d7fd78c88-rzpqr   1/1     Running            0          2m20s
+
+NAME                 TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+service/kubernetes   ClusterIP      10.96.0.1        <none>        443/TCP                      8d
+service/mongo        ClusterIP      10.102.245.214   <none>        27017/TCP                    2m21s
+service/nginx        LoadBalancer   10.110.136.39    localhost     80:30691/TCP,443:30058/TCP   2m20s
+service/node         ClusterIP      10.108.221.120   <none>        8080/TCP                     2m20s
+service/redis        ClusterIP      10.100.120.91    <none>        6379/TCP                     2m20s
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginx   1/1     1            1           2m21s
+deployment.apps/node    1/1     1            1           2m20s
+deployment.apps/redis   1/1     1            1           2m20s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginx-6fcdc7b59f   1         1         1       2m21s
+replicaset.apps/node-55f9b5cd69    1         1         1       2m20s
+replicaset.apps/redis-7d7fd78c88   1         1         1       2m20s
+
+NAME                     READY   AGE
+statefulset.apps/mongo   1/1     2m21s
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k exec nginx-6fcdc7b59f-zjg22  curl http://node
+OCI runtime exec failed: exec failed: container_linux.go:345: starting container process caused "exec: \"curl\": executable file not found in $PATH": unknown
+command terminated with exit code 126
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k exec nginx-6fcdc7b59f-zjg22  sh curl http://node
+sh: can't open 'curl': No such file or directory
+command terminated with exit code 2
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k exec nginx-6fcdc7b59f-zjg22 -it sh
+/ # curl http://node:8080
+sh: curl: not found
+/ # exit
+command terminated with exit code 127
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k exec nginx-6fcdc7b59f-zjg22 apk add curl
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.10/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.10/community/x86_64/APKINDEX.tar.gz
+(1/4) Installing ca-certificates (20190108-r0)
+(2/4) Installing nghttp2-libs (1.39.2-r0)
+(3/4) Installing libcurl (7.66.0-r0)
+(4/4) Installing curl (7.66.0-r0)
+Executing busybox-1.30.1-r2.trigger
+Executing ca-certificates-20190108-r0.trigger
+OK: 30 MiB in 41 packages
+MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ k exec nginx-6fcdc7b59f-zjg22 curl http://node:8080
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 18435  100 18435    0     0  1285k      0 --:--:-- --:--:-- --:--:-- 1285k
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Code with Dan</title>
+</head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Code with Dan - JavaScript, Angular, Node.js, ASP.NET, C#, HTML5 training videos and classes.">
+    <meta property="og:image" content="http://www.codewithdan.com/img/codeWithDanLogo.png" />
+    <meta property="og:title" content="Code with Dan" />
+    <meta property="og:description" content="Code with Dan: The best way to learn development and programming technologies and concepts!"/>
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css'>
+    <!--<link href='//fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>-->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet" type="text/css" />
+    
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+</head>
+<body>
+    <header class="navbar navbar-default navbar-fixed-top" role="navigation">
+         <div class="top-bar">
+            <div class="container-fluid">
+                <div class="wrapper"></div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <nav class="wrapper">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-xs-12">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <div>
+                                <a class="navbar-brand" href="/">
+                                    <img src="/img/codeWithDanLogo.png" alt="Code with Dan Logo" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9 col-md-9 col-xs-12">
+                        <div class="collapse navbar-collapse" id="menu-collapse">
+                            <div class="position-nav-links">
+                                <div class="row top-navbar">
+                                    <div class="col-md-12">
+                                        <ul class="nav navbar-nav navbar-right">
+                                                <li>
+                                                    <a href="/register">Create an Account</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/login">Login</a>
+                                                </li>
+                                            <li>
+                                                <a href="/cart">
+                                                    <span class="fa fa-shopping-cart green"></span>&nbsp;&nbsp;
+                                                    <span class="cartTotal green">$0.00</span>&nbsp;&nbsp;
+                                                    <span class="green">Cart</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="row bottom-navbar">
+                                    <div class="col-md-12">
+                                        <ul class="nav navbar-nav navbar-right">
+                                                <li><a href="/products/Courseware">Courseware</a></li>
+                                                <li><a href="/products/Training">Training</a></li>
+                                                <li><a href="/products/Videos">Videos</a></li>
+                                            <li><a href="//blog.codewithdan.com">Blog</a></li>
+                                            <li>
+                                                <div class="search-container">
+                                                    <input type="text" placeholder="Search" id="searchText" class="search-box" value="" />
+                                                    <button type="submit" id="searchButton" class="btn btn-default search-button">
+                                                        <span class="fa fa-search"></span>
+                                                    </button>
+                                                </div>
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        <section class="section feature-section">
+    <div id="carousel-codewithdan" class="carousel slide" data-ride="carousel" data-interval="15000">
+        <ol class="carousel-indicators">
+                <li data-target="#carousel-codewithdan" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-codewithdan" data-slide-to="1" class=""></li>
+                <li data-target="#carousel-codewithdan" data-slide-to="2" class=""></li>
+                <li data-target="#carousel-codewithdan" data-slide-to="3" class=""></li>
+        </ol>
+
+        <div class="carousel-inner">
+                <section class="item full-width-background active" style="background-image: url(/img/background_girl_1920x500.jpg);">
+                    <div class="wrapper">
+                        <div class="container-fluid">
+                            <div class="row center-block animated fadeInDown">
+                                <div class="col-lg-12 col-md-12 feature-section-content">
+                                    <div class="featured-item">
+                                        <div class="item-name ">Angular JumpStart</div>
+                                        <br />
+                                        <div class="item-summary ">The most productive way to learn Angular! JumpStart your learning with this step-by-step video course!</div>
+                                            <br />
+                                            <div class="item-highlight ">Over 6 hours of content!</div>
+                                        <br /><br />
+                                        <a class="btn btn-primary btn-x-lg" href="/products/training">Get Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="item full-width-background " style="background-image: url(/img/background_singapore_1920x500.jpg);">
+                    <div class="wrapper">
+                        <div class="container-fluid">
+                            <div class="row center-block animated fadeInDown">
+                                <div class="col-lg-12 col-md-12 feature-section-content">
+                                    <div class="featured-item">
+                                        <div class="item-name ">World-Class Onsite Training</div>
+                                        <br />
+                                        <div class="item-summary ">We provide the worlds best hands-on training at your location. Anywhere in the world!</div>
+                                        <br /><br />
+                                        <a class="btn btn-primary btn-x-lg" href="/products/training">Get Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="item full-width-background " style="background-image: url(/img/background_road_1920x500.jpg);">
+                    <div class="wrapper">
+                        <div class="container-fluid">
+                            <div class="row center-block animated fadeInDown">
+                                <div class="col-lg-12 col-md-12 feature-section-content">
+                                    <div class="featured-item">
+                                        <div class="item-name white">Focused Onsite Training</div>
+                                        <br />
+                                        <div class="item-summary white">World-class JavaScript, Angular, Node.js, C#, ASP.NET MVC (and more) training at your location. Whether you're located in the middle of nowhere or in a high-rise corporate building.</div>
+                                        <br /><br />
+                                        <a class="btn btn-primary btn-x-lg" href="/products/training">Get Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="item full-width-background " style="background-image: url(/img/background_man_couch_1920x500.jpg);">
+                    <div class="wrapper">
+                        <div class="container-fluid">
+                            <div class="row center-block animated fadeInDown">
+                                <div class="col-lg-12 col-md-12 feature-section-content">
+                                    <div class="featured-item">
+                                        <div class="item-name ">Angular Custom Directives</div>
+                                        <br />
+                                        <div class="item-summary ">Dive in to Angular and learn how to build custom directives!</div>
+                                            <br />
+                                            <div class="item-highlight ">Advanced Angular Content!</div>
+                                        <br /><br />
+                                        <a class="btn btn-primary btn-x-lg" href="/products/training">Get Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+        </div>
+
+    <!--<a class="left carousel-control" href="#carousel-codewithdan" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#carousel-codewithdan" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>-->
+
+    </div>
+</section>
+
+<section class="section seeit-section">
+    <div class="container-fluid wrapper">
+        <div class="row seeit-section-details">
+            <div class="col-md-4">
+                <section data-sr="wait 1s, ease-in-out 50px">
+                    <header>
+                        <i class="fa fa-lg fa-search orange"></i> see it!
+                    </header>
+                    <br />
+                    <div class="seeit-section-summary">Get focused classroom or video training</div>
+                </section>
+            </div>
+            <div class="col-md-4 remove-col-padding">
+                <section  data-sr="wait 1.5s, ease-in-out 50px">
+                    <header><i class="fa fa-lg fa-bolt yellow"></i> learn it!</header>
+                    <br />
+                    <div class="seeit-section-summary">Learn from industry experts who know how to teach - not just talk</div>
+                </section>
+            </div>
+            <div class="col-md-4">
+                <section  data-sr="wait 2.0s, ease-in-out 50px">
+                    <header><i class="fa fa-lg fa-flask green"></i> code it!</header>
+                    <br />
+                    <div class="seeit-section-summary">Follow along with code recipes, step-by-step videos or hands-on labs</div>
+                </section>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="training-section parallax">
+    <div class="container-fluid wrapper">
+        <div class="section-details">
+            <div class="section-headline" data-sr="enter from the top and hustle 50px over 2.5s">
+                <a href="/products/training">
+                    <i class="fa fa-2x fa-users"></i>&nbsp;&nbsp;
+                    Instructor-Led Training
+                </a>
+            </div>
+            <div class="section-desc" data-sr>
+                Get expert onsite or online instructor-led, hands-on training direct from Dan Wahlin and other industry experts.
+            </div>
+            <div>
+                <a class="btn btn-success btn-x-lg" href="/products/training">View Classes</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="videos-section">
+    <div class="container-fluid wrapper">
+        <div class="section-details">
+            <div class="section-headline" data-sr="enter from the top and hustle 50px over 2.5s">
+                <a href="/products/videos">
+                    <i class="fa fa-2x fa-laptop"></i>&nbsp;&nbsp;
+                    Online Training Videos
+                </a>
+            </div>
+            <div class="section-desc" data-sr>
+                Focused video training that maximizes your learning.
+            </div>
+            <div>
+                <a class="btn btn-success btn-x-lg" href="/products/videos">View Video Courses</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="courseware-section">
+    <div class="container-fluid wrapper">
+        <div class="section-details">
+            <div class="section-headline" data-sr="enter from the top and hustle 50px over 2.5s">
+                <a href="/products/courseware">
+                    <i class="fa fa-2x fa-file-text"></i>&nbsp;&nbsp;
+                    Training Courseware
+                </a>
+            </div>
+            <div class="section-desc" data-sr>
+                Get access to the best courseware in the industry for your own instructor-led classes.
+            </div>
+            <div>
+                <a class="btn btn-success btn-x-lg" href="/products/courseware">View Courseware</a>
+            </div>
+        </div>
+</section>
+
+<script src='/js/libs/scrollReveal.min.js'></script>
+<script>
+    //ScrollReveal
+    window.sr = new scrollReveal();
+</script>
+
+    </main>
+
+    <br /><br />
+
+    <div class="social-section">
+        <div class="container-fluid">
+            <div class="wrapper">
+                <div class="row">
+                    <br />
+                    <div class="col-md-12 center">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={encodedUrl}&amp;t=Check out the great content on the Code with Dan site: {encodedUrl}"
+                            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                            <i class="fa fa-facebook-square social-icon" style="color:#3B5998;"></i></a>&nbsp;&nbsp;
+                        <a href="https://twitter.com/intent/tweet/?url={encodedUrl}&amp;text=Check out the great content on the Code with Dan website!"
+                            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                            <i class="fa fa-twitter-square social-icon" style="color:#00aced;"></i></a>&nbsp;&nbsp;
+                        <a href="https://plus.google.com/share?url={encodedUrl}"
+                            onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                            <i class="fa fa-google-plus-square social-icon" style="color:#dd4b39;"></i></a>&nbsp;&nbsp;
+                        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={encodedUrl}&amp;title=Code With Dan&amp;summary=Code with Dan: Training and Videos&amp;source=Code with Dan"
+                            onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                            <i class="fa fa-linkedin-square social-icon" style="color:#007bb6"></i></a>                    </div>
+                    <br /><br />
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="navbar navbar-inner">
+            <div class="wrapper">
+                <div class="row">
+                    <br />
+                    <div class="col-md-3 padding-footer">
+                        &copy; <span id="year"></span> Wahlin Consulting
+                    </div>
+                    <div class="col-md-9 navbar-collapse navbar-right">
+                        <ul class="nav navbar-nav">
+                            <li><a href="/contact">Contact Us</a></li>
+                            <li><a href="/about">About Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <script src="/js/main.js"></script>
+    <script>
+        codeWithDan.csrf = '0eI8FLND-mTN1YCW-dd82xAitBE5VD12Kg8s';
+
+        document.getElementById('year').innerHTML = new Date().getFullYear();
+    </script>
+
+    
+
+</body>
+</html>MACC02RR83AG8WP:CodeWithDanDockerServices vijayvepakomma$ 
