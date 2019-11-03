@@ -1,0 +1,148 @@
+Last login: Sat Nov  2 09:18:08 on ttys001
+MACC02RR83AG8WP:~ vijayvepakomma$ gcloud beta container clusters get-credentials my-regional-cluster --region us-east1 --project kubernetes-example
+You do not currently have this command group installed.  Using it 
+requires the installation of components: [beta]
+
+
+Your current Cloud SDK version is: 269.0.0
+Installing components from version: 269.0.0
+
+┌─────────────────────────────────────────────┐
+│     These components will be installed.     │
+├──────────────────────┬────────────┬─────────┤
+│         Name         │  Version   │   Size  │
+├──────────────────────┼────────────┼─────────┤
+│ gcloud Beta Commands │ 2019.05.17 │ < 1 MiB │
+└──────────────────────┴────────────┴─────────┘
+
+For the latest full release notes, please visit:
+  https://cloud.google.com/sdk/release_notes
+
+Do you want to continue (Y/n)?  Y
+
+╔════════════════════════════════════════════════════════════╗
+╠═ Creating update staging area                             ═╣
+╠════════════════════════════════════════════════════════════╣
+╠═ Installing: gcloud Beta Commands                         ═╣
+╠════════════════════════════════════════════════════════════╣
+╠═ Creating backup and activating new installation          ═╣
+╚════════════════════════════════════════════════════════════╝
+
+Performing post processing steps...done.                                                                                                                                                                                                                                       
+
+Update done!
+
+Restarting command:
+  $ gcloud beta container clusters get-credentials my-regional-cluster --region us-east1 --project kubernetes-example
+
+Fetching cluster endpoint and auth data.
+ERROR: (gcloud.beta.container.clusters.get-credentials) ResponseError: code=400, message=Project 'project:kubernetes-example' not found or deleted.
+MACC02RR83AG8WP:~ vijayvepakomma$ gcloud projects list
+PROJECT_ID                NAME               PROJECT_NUMBER
+amazing-modem-243211      My Project         688621851625
+artful-striker-256416     My First Project   1086405171069
+aspnetexample             ASPNETExample      1050705966650
+composite-cable-603       TastePatientApp    255521725730
+fleet-tensor-476          TestPushSharp      123009794819
+kubernetesexample-256416  KubernetesExample  43336565824
+outlooksync-1183          OutlookSync        641154290892
+sampleandroidapp-fb1e1    SampleAndroidApp   1039843199668
+sampleandroidapp2         SampleAndroidApp2  147179825263
+samplecontrolapp          SampleControlApp   181237647466
+sampletriviaapp           SampleTriviaApp    734766209884
+trim-odyssey-243212       My Project         574526350980
+MACC02RR83AG8WP:~ vijayvepakomma$ gcloud beta container clusters get-credentials my-regional-cluster --region us-east1 --project kubernetesexample-256416 
+Fetching cluster endpoint and auth data.
+kubeconfig entry generated for my-regional-cluster.
+MACC02RR83AG8WP:~ vijayvepakomma$ k config
+Modify kubeconfig files using subcommands like "kubectl config set current-context my-context"
+
+ The loading order follows these rules:
+
+  1.  If the --kubeconfig flag is set, then only that file is loaded. The flag may only be set once and no merging takes
+place.
+  2.  If $KUBECONFIG environment variable is set, then it is used as a list of paths (normal path delimiting rules for
+your system). These paths are merged. When a value is modified, it is modified in the file that defines the stanza. When
+a value is created, it is created in the first file that exists. If no files in the chain exist, then it creates the
+last file in the list.
+  3.  Otherwise, ${HOME}/.kube/config is used and no merging takes place.
+
+Available Commands:
+  current-context Displays the current-context
+  delete-cluster  Delete the specified cluster from the kubeconfig
+  delete-context  Delete the specified context from the kubeconfig
+  get-clusters    Display clusters defined in the kubeconfig
+  get-contexts    Describe one or many contexts
+  rename-context  Renames a context from the kubeconfig file.
+  set             Sets an individual value in a kubeconfig file
+  set-cluster     Sets a cluster entry in kubeconfig
+  set-context     Sets a context entry in kubeconfig
+  set-credentials Sets a user entry in kubeconfig
+  unset           Unsets an individual value in a kubeconfig file
+  use-context     Sets the current-context in a kubeconfig file
+  view            Display merged kubeconfig settings or a specified kubeconfig file
+
+Usage:
+  kubectl config SUBCOMMAND [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+MACC02RR83AG8WP:~ vijayvepakomma$ k config view
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://kubernetes.docker.internal:6443
+  name: docker-desktop
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://35.196.121.188
+  name: gke_kubernetesexample-256416_us-east1-b_my-zonal-cluster
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://34.73.227.255
+  name: gke_kubernetesexample-256416_us-east1_my-regional-cluster
+contexts:
+- context:
+    cluster: docker-desktop
+    user: docker-desktop
+  name: docker-desktop
+- context:
+    cluster: docker-desktop
+    user: docker-desktop
+  name: docker-for-desktop
+- context:
+    cluster: gke_kubernetesexample-256416_us-east1-b_my-zonal-cluster
+    user: gke_kubernetesexample-256416_us-east1-b_my-zonal-cluster
+  name: gke_kubernetesexample-256416_us-east1-b_my-zonal-cluster
+- context:
+    cluster: gke_kubernetesexample-256416_us-east1_my-regional-cluster
+    user: gke_kubernetesexample-256416_us-east1_my-regional-cluster
+  name: gke_kubernetesexample-256416_us-east1_my-regional-cluster
+current-context: gke_kubernetesexample-256416_us-east1_my-regional-cluster
+kind: Config
+preferences: {}
+users:
+- name: docker-desktop
+  user:
+    client-certificate-data: REDACTED
+    client-key-data: REDACTED
+- name: gke_kubernetesexample-256416_us-east1-b_my-zonal-cluster
+  user:
+    auth-provider:
+      config:
+        cmd-args: config config-helper --format=json
+        cmd-path: /Users/vijayvepakomma/GoogleCloudSDK/google-cloud-sdk/bin/gcloud
+        expiry-key: '{.credential.token_expiry}'
+        token-key: '{.credential.access_token}'
+      name: gcp
+- name: gke_kubernetesexample-256416_us-east1_my-regional-cluster
+  user:
+    auth-provider:
+      config:
+        cmd-args: config config-helper --format=json
+        cmd-path: /Users/vijayvepakomma/GoogleCloudSDK/google-cloud-sdk/bin/gcloud
+        expiry-key: '{.credential.token_expiry}'
+        token-key: '{.credential.access_token}'
+      name: gcp
+MACC02RR83AG8WP:~ vijayvepakomma$ 

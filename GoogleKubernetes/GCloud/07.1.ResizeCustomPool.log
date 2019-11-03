@@ -1,0 +1,77 @@
+Last login: Sun Nov  3 08:00:39 on ttys007
+MACC02RR83AG8WP:~ vijayvepakomma$ gcloud container node-pools list --cluster my-regional-cluster --region us-east1
+NAME          MACHINE_TYPE   DISK_SIZE_GB  NODE_VERSION
+default-pool  n1-standard-1  15            1.13.11-gke.9
+my-pool       n1-standard-1  100           1.13.11-gke.9
+MACC02RR83AG8WP:~ vijayvepakomma$ gcloud container clusters resize my-regional-cluster --region us-east1 --node-pool my-pool --size 2
+WARNING: The --size flag is now deprecated. Please use `--num-nodes` instead.
+Pool [my-pool] for [my-regional-cluster] will be resized to 2.
+
+Do you want to continue (Y/n)?  Y
+
+ERROR: (gcloud.container.clusters.resize) PERMISSION_DENIED: 
+	(1) insufficient regional quota to satisfy request: resource "CPUS": request requires '3.0' and is short '1.0'. project has a quota of '8.0' with '2.0' available. View and manage quotas at https://console.cloud.google.com/iam-admin/quotas?usage=USED&project=kubernetesexample-256416
+	(2) insufficient regional quota to satisfy request: resource "IN_USE_ADDRESSES": request requires '3.0' and is short '1.0'. project has a quota of '8.0' with '2.0' available. View and manage quotas at https://console.cloud.google.com/iam-admin/quotas?usage=USED&project=kubernetesexample-256416.
+MACC02RR83AG8WP:~ vijayvepakomma$ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

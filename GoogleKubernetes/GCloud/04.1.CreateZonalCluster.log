@@ -1,0 +1,174 @@
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ gcloud clusters create my-zonal-cluster --zone -us-east1-a \
+> --preemptible \
+> --machine-type n1-standard-1 \
+> --no-enable-cloud-monitoring \
+> --no-enable-cloud-logging
+ERROR: (gcloud) Invalid choice: 'clusters'.
+Maybe you meant:
+  gcloud logging metrics create
+  gcloud logging sinks create
+  gcloud services enable
+  gcloud bigtable clusters create
+  gcloud container clusters create
+  gcloud dataproc clusters create
+  gcloud logging read
+  gcloud logging write
+  gcloud compute addresses create
+  gcloud logging logs delete
+
+To search the help text of gcloud commands, run:
+  gcloud help -- SEARCH_TERMS
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ gcloud container clusters create my-zonal-cluster --zone us-east1-a \> --preemptible \
+> --machine-type n1-standard-1 \
+> --no-enable-cloud-monitoring \
+> --no-enable-cloud-logging
+WARNING: From 1.14, legacy Stackdriver GKE monitoring is deprecated. Thus, flag `--enable-cloud-monitoring` is also deprecated. Please use `--enable-stackdriver-kubernetes` instead, to migrate to new Stackdriver Kubernetes Engine monitoring and logging. For more details, please read: https://cloud.google.com/monitoring/kubernetes-engine/migration.
+WARNING: From 1.14, legacy Stackdriver GKE logging is deprecated. Thus, flag `--enable-cloud-logging` is also deprecated. Please use `--enable-stackdriver-kubernetes` instead, to migrate to new Stackdriver Kubernetes Engine monitoring and logging. For more details, please read: https://cloud.google.com/monitoring/kubernetes-engine/migration.
+WARNING: In November 2019, node auto-upgrade will be enabled by default for newly created clusters and node pools. To disable it, use the `--no-enable-autoupgrade` flag.
+WARNING: Currently VPC-native is not the default mode during cluster creation. In the future, this will become the default mode and can be disabled using `--no-enable-ip-alias` flag. Use `--[no-]enable-ip-alias` flag to suppress this warning.
+WARNING: Starting in 1.12, default node pools in new clusters will have their legacy Compute Engine instance metadata endpoints disabled by default. To create a cluster with legacy instance metadata endpoints disabled in the default node pool, run `clusters create` with the flag `--metadata disable-legacy-endpoints=true`.
+WARNING: Your Pod address range (`--cluster-ipv4-cidr`) can accommodate at most 1008 node(s). 
+This will enable the autorepair feature for nodes. Please see https://cloud.google.com/kubernetes-engine/docs/node-auto-repair for more information on node autorepairs.
+ERROR: (gcloud.container.clusters.create) ResponseError: code=403, message=Permission denied on 'locations/us-east1-a' (or it may not exist).
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ gcloud zones listERROR: (gcloud) Invalid choice: 'zones'.
+Maybe you meant:
+  gcloud compute zones list
+  gcloud filestore zones list
+  gcloud redis zones list
+  gcloud dns managed-zones list
+  gcloud compute machine-types list
+  gcloud container clusters list
+
+To search the help text of gcloud commands, run:
+  gcloud help -- SEARCH_TERMS
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ gcloud compute zones list
+NAME                       REGION                   STATUS  NEXT_MAINTENANCE  TURNDOWN_DATE
+us-east1-b                 us-east1                 UP
+us-east1-c                 us-east1                 UP
+us-east1-d                 us-east1                 UP
+us-east4-c                 us-east4                 UP
+us-east4-b                 us-east4                 UP
+us-east4-a                 us-east4                 UP
+us-central1-c              us-central1              UP
+us-central1-a              us-central1              UP
+us-central1-f              us-central1              UP
+us-central1-b              us-central1              UP
+us-west1-b                 us-west1                 UP
+us-west1-c                 us-west1                 UP
+us-west1-a                 us-west1                 UP
+europe-west4-a             europe-west4             UP
+europe-west4-b             europe-west4             UP
+europe-west4-c             europe-west4             UP
+europe-west1-b             europe-west1             UP
+europe-west1-d             europe-west1             UP
+europe-west1-c             europe-west1             UP
+europe-west3-c             europe-west3             UP
+europe-west3-a             europe-west3             UP
+europe-west3-b             europe-west3             UP
+europe-west2-c             europe-west2             UP
+europe-west2-b             europe-west2             UP
+europe-west2-a             europe-west2             UP
+asia-east1-b               asia-east1               UP
+asia-east1-a               asia-east1               UP
+asia-east1-c               asia-east1               UP
+asia-southeast1-b          asia-southeast1          UP
+asia-southeast1-a          asia-southeast1          UP
+asia-southeast1-c          asia-southeast1          UP
+asia-northeast1-b          asia-northeast1          UP
+asia-northeast1-c          asia-northeast1          UP
+asia-northeast1-a          asia-northeast1          UP
+asia-south1-c              asia-south1              UP
+asia-south1-b              asia-south1              UP
+asia-south1-a              asia-south1              UP
+australia-southeast1-b     australia-southeast1     UP
+australia-southeast1-c     australia-southeast1     UP
+australia-southeast1-a     australia-southeast1     UP
+southamerica-east1-b       southamerica-east1       UP
+southamerica-east1-c       southamerica-east1       UP
+southamerica-east1-a       southamerica-east1       UP
+asia-east2-a               asia-east2               UP
+asia-east2-b               asia-east2               UP
+asia-east2-c               asia-east2               UP
+asia-northeast2-a          asia-northeast2          UP
+asia-northeast2-b          asia-northeast2          UP
+asia-northeast2-c          asia-northeast2          UP
+europe-north1-a            europe-north1            UP
+europe-north1-b            europe-north1            UP
+europe-north1-c            europe-north1            UP
+europe-west6-a             europe-west6             UP
+europe-west6-b             europe-west6             UP
+europe-west6-c             europe-west6             UP
+northamerica-northeast1-a  northamerica-northeast1  UP
+northamerica-northeast1-b  northamerica-northeast1  UP
+northamerica-northeast1-c  northamerica-northeast1  UP
+us-west2-a                 us-west2                 UP
+us-west2-b                 us-west2                 UP
+us-west2-c                 us-west2                 UP
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ gcloud clusters create my-zonal-cluster --zone -us-east1-b --preemptible --machine-type n1-standard-1 --no-enable-cloud-monitoring --no-enable-cloud-logging
+ERROR: (gcloud) Invalid choice: 'clusters'.
+Maybe you meant:
+  gcloud container clusters create
+  gcloud logging metrics create
+  gcloud logging sinks create
+  gcloud services enable
+  gcloud container clusters delete
+  gcloud container clusters describe
+  gcloud container clusters get-credentials
+  gcloud container clusters list
+  gcloud container clusters resize
+  gcloud container clusters update
+
+To search the help text of gcloud commands, run:
+  gcloud help -- SEARCH_TERMS
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ gcloud container  clusters create my-zonal-cluster --zone -us-east1-b --preemptible --machine-type n1-standard-1 --no-enable-cloud-monitoring --no-enable-cloud-logging
+ERROR: (gcloud.container.clusters.create) argument --zone/-z: expected one argument
+Usage: gcloud container clusters create NAME [optional flags]
+  optional flags may be  --accelerator | --additional-zones | --addons |
+                         --async | --cluster-ipv4-cidr |
+                         --cluster-secondary-range-name | --cluster-version |
+                         --create-subnetwork | --default-max-pods-per-node |
+                         --disk-size | --disk-type | --enable-autorepair |
+                         --enable-autoscaling | --enable-autoupgrade |
+                         --enable-basic-auth | --enable-binauthz |
+                         --enable-cloud-logging | --enable-cloud-monitoring |
+                         --enable-intra-node-visibility | --enable-ip-alias |
+                         --enable-kubernetes-alpha |
+                         --enable-legacy-authorization |
+                         --enable-master-authorized-networks |
+                         --enable-network-egress-metering |
+                         --enable-network-policy | --enable-private-endpoint |
+                         --enable-private-nodes |
+                         --enable-resource-consumption-metering |
+                         --enable-stackdriver-kubernetes | --enable-tpu |
+                         --help | --image-type | --issue-client-certificate |
+                         --labels | --local-ssd-count | --machine-type |
+                         --maintenance-window | --master-authorized-networks |
+                         --master-ipv4-cidr | --max-nodes |
+                         --max-nodes-per-pool | --max-pods-per-node |
+                         --metadata | --metadata-from-file |
+                         --min-cpu-platform | --min-nodes | --network |
+                         --node-labels | --node-locations | --node-taints |
+                         --node-version | --num-nodes | --password |
+                         --preemptible | --region |
+                         --resource-usage-bigquery-dataset | --scopes |
+                         --service-account | --services-ipv4-cidr |
+                         --services-secondary-range-name | --subnetwork |
+                         --tags | --tpu-ipv4-cidr | --username | --zone
+
+For detailed information on this command and its flags, run:
+  gcloud container clusters create --help
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ gcloud container  clusters create my-zonal-cluster --zone us-east1-b --preemptible --machine-type n1-standard-1 --no-enable-cloud-monitoring --no-enable-cloud-logging
+WARNING: From 1.14, legacy Stackdriver GKE monitoring is deprecated. Thus, flag `--enable-cloud-monitoring` is also deprecated. Please use `--enable-stackdriver-kubernetes` instead, to migrate to new Stackdriver Kubernetes Engine monitoring and logging. For more details, please read: https://cloud.google.com/monitoring/kubernetes-engine/migration.
+WARNING: From 1.14, legacy Stackdriver GKE logging is deprecated. Thus, flag `--enable-cloud-logging` is also deprecated. Please use `--enable-stackdriver-kubernetes` instead, to migrate to new Stackdriver Kubernetes Engine monitoring and logging. For more details, please read: https://cloud.google.com/monitoring/kubernetes-engine/migration.
+WARNING: In November 2019, node auto-upgrade will be enabled by default for newly created clusters and node pools. To disable it, use the `--no-enable-autoupgrade` flag.
+WARNING: Currently VPC-native is not the default mode during cluster creation. In the future, this will become the default mode and can be disabled using `--no-enable-ip-alias` flag. Use `--[no-]enable-ip-alias` flag to suppress this warning.
+WARNING: Starting in 1.12, default node pools in new clusters will have their legacy Compute Engine instance metadata endpoints disabled by default. To create a cluster with legacy instance metadata endpoints disabled in the default node pool, run `clusters create` with the flag `--metadata disable-legacy-endpoints=true`.
+WARNING: Your Pod address range (`--cluster-ipv4-cidr`) can accommodate at most 1008 node(s). 
+This will enable the autorepair feature for nodes. Please see https://cloud.google.com/kubernetes-engine/docs/node-auto-repair for more information on node autorepairs.
+Creating cluster my-zonal-cluster in us-east1-b... Cluster is being health-checked (master is healthy)...done.                                                                                              
+Created [https://container.googleapis.com/v1/projects/kubernetesexample-256416/zones/us-east1-b/clusters/my-zonal-cluster].
+To inspect the contents of your cluster, go to: https://console.cloud.google.com/kubernetes/workload_/gcloud/us-east1-b/my-zonal-cluster?project=kubernetesexample-256416
+kubeconfig entry generated for my-zonal-cluster.
+NAME              LOCATION    MASTER_VERSION  MASTER_IP       MACHINE_TYPE   NODE_VERSION   NUM_NODES  STATUS
+my-zonal-cluster  us-east1-b  1.13.11-gke.9   35.196.121.188  n1-standard-1  1.13.11-gke.9  3          RUNNING
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ 

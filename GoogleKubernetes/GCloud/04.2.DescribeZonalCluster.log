@@ -1,0 +1,88 @@
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ gcloud container clusters describe my-zonal-cluster --zone us-east1-b
+addonsConfig:
+  kubernetesDashboard:
+    disabled: true
+  networkPolicyConfig:
+    disabled: true
+clusterIpv4Cidr: 10.8.0.0/14
+createTime: '2019-11-03T11:49:36+00:00'
+currentMasterVersion: 1.13.11-gke.9
+currentNodeCount: 3
+currentNodeVersion: 1.13.11-gke.9
+databaseEncryption:
+  state: DECRYPTED
+defaultMaxPodsConstraint:
+  maxPodsPerNode: '110'
+endpoint: 35.196.121.188
+initialClusterVersion: 1.13.11-gke.9
+instanceGroupUrls:
+- https://www.googleapis.com/compute/v1/projects/kubernetesexample-256416/zones/us-east1-b/instanceGroupManagers/gke-my-zonal-cluster-default-pool-856831df-grp
+labelFingerprint: a9dc16a7
+legacyAbac: {}
+location: us-east1-b
+locations:
+- us-east1-b
+loggingService: none
+maintenancePolicy: {}
+masterAuth:
+  clusterCaCertificate: ...
+monitoringService: none
+name: my-zonal-cluster
+network: default
+networkConfig:
+  network: projects/kubernetesexample-256416/global/networks/default
+  subnetwork: projects/kubernetesexample-256416/regions/us-east1/subnetworks/default
+nodeConfig:
+  diskSizeGb: 100
+  diskType: pd-standard
+  imageType: COS
+  machineType: n1-standard-1
+  metadata:
+    disable-legacy-endpoints: 'true'
+  oauthScopes:
+  - https://www.googleapis.com/auth/devstorage.read_only
+  - https://www.googleapis.com/auth/logging.write
+  - https://www.googleapis.com/auth/monitoring
+  - https://www.googleapis.com/auth/service.management.readonly
+  - https://www.googleapis.com/auth/servicecontrol
+  - https://www.googleapis.com/auth/trace.append
+  preemptible: true
+  serviceAccount: default
+  shieldedInstanceConfig:
+    enableIntegrityMonitoring: true
+nodeIpv4CidrSize: 24
+nodePools:
+- config:
+    diskSizeGb: 100
+    diskType: pd-standard
+    imageType: COS
+    machineType: n1-standard-1
+    metadata:
+      disable-legacy-endpoints: 'true'
+    oauthScopes:
+    - https://www.googleapis.com/auth/devstorage.read_only
+    - https://www.googleapis.com/auth/logging.write
+    - https://www.googleapis.com/auth/monitoring
+    - https://www.googleapis.com/auth/service.management.readonly
+    - https://www.googleapis.com/auth/servicecontrol
+    - https://www.googleapis.com/auth/trace.append
+    preemptible: true
+    serviceAccount: default
+    shieldedInstanceConfig:
+      enableIntegrityMonitoring: true
+  initialNodeCount: 3
+  instanceGroupUrls:
+  - https://www.googleapis.com/compute/v1/projects/kubernetesexample-256416/zones/us-east1-b/instanceGroupManagers/gke-my-zonal-cluster-default-pool-856831df-grp
+  management:
+    autoRepair: true
+  name: default-pool
+  podIpv4CidrSize: 24
+  selfLink: https://container.googleapis.com/v1/projects/kubernetesexample-256416/zones/us-east1-b/clusters/my-zonal-cluster/nodePools/default-pool
+  status: RUNNING
+  version: 1.13.11-gke.9
+selfLink: https://container.googleapis.com/v1/projects/kubernetesexample-256416/zones/us-east1-b/clusters/my-zonal-cluster
+servicesIpv4Cidr: 10.11.240.0/20
+status: RUNNING
+subnetwork: default
+zone: us-east1-b
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ 

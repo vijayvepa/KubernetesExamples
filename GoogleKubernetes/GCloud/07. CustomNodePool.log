@@ -1,0 +1,72 @@
+Last login: Sat Nov  2 19:27:41 on ttys006
+MACC02RR83AG8WP:~ vijayvepakomma$ gcloud container node-pools create my-pool --num-nodes=2 \
+> --cluster my-regional-cluster --region us-east1
+WARNING: In November 2019, node auto-upgrade will be enabled by default for newly created clusters and node pools. To disable it, use the `--no-enable-autoupgrade` flag.
+WARNING: Starting in 1.12, new node pools will be created with their legacy Compute Engine instance metadata APIs disabled by default. To create a node pool with legacy instance metadata endpoints disabled, run `node-pools create` with the flag `--metadata disable-legacy-endpoints=true`.
+This will enable the autorepair feature for nodes. Please see https://cloud.google.com/kubernetes-engine/docs/node-auto-repair for more information on node autorepairs.
+ERROR: (gcloud.container.node-pools.create) ResponseError: code=403, message=
+	(1) insufficient regional quota to satisfy request: resource "CPUS": request requires '6.0' and is short '4.0'. project has a quota of '8.0' with '2.0' available. View and manage quotas at https://console.cloud.google.com/iam-admin/quotas?usage=USED&project=kubernetesexample-256416
+	(2) insufficient regional quota to satisfy request: resource "IN_USE_ADDRESSES": request requires '6.0' and is short '4.0'. project has a quota of '8.0' with '2.0' available. View and manage quotas at https://console.cloud.google.com/iam-admin/quotas?usage=USED&project=kubernetesexample-256416.
+MACC02RR83AG8WP:~ vijayvepakomma$ gcloud container node-pools create my-pool --num-nodes=1 --cluster my-regional-cluster --region us-east1
+WARNING: In November 2019, node auto-upgrade will be enabled by default for newly created clusters and node pools. To disable it, use the `--no-enable-autoupgrade` flag.
+WARNING: Starting in 1.12, new node pools will be created with their legacy Compute Engine instance metadata APIs disabled by default. To create a node pool with legacy instance metadata endpoints disabled, run `node-pools create` with the flag `--metadata disable-legacy-endpoints=true`.
+This will enable the autorepair feature for nodes. Please see https://cloud.google.com/kubernetes-engine/docs/node-auto-repair for more information on node autorepairs.
+ERROR: (gcloud.container.node-pools.create) ResponseError: code=403, message=
+	(1) insufficient regional quota to satisfy request: resource "CPUS": request requires '3.0' and is short '1.0'. project has a quota of '8.0' with '2.0' available. View and manage quotas at https://console.cloud.google.com/iam-admin/quotas?usage=USED&project=kubernetesexample-256416
+	(2) insufficient regional quota to satisfy request: resource "IN_USE_ADDRESSES": request requires '3.0' and is short '1.0'. project has a quota of '8.0' with '2.0' available. View and manage quotas at https://console.cloud.google.com/iam-admin/quotas?usage=USED&project=kubernetesexample-256416.
+MACC02RR83AG8WP:~ vijayvepakomma$ gcloud container clusters delete my-zoned-cluster
+The following clusters will be deleted.
+ - [my-zoned-cluster] in [us-east1-c]
+
+Do you want to continue (Y/n)?  Y
+
+ERROR: (gcloud.container.clusters.delete) Some requests did not succeed:
+ - args: [u"ResponseError: code=404, message=Not found: projects/kubernetesexample-256416/zones/us-east1-c/clusters/my-zoned-cluster.\nNo cluster named 'my-zoned-cluster' in kubernetesexample-256416."]
+   exit_code: 1
+   message: ResponseError: code=404, message=Not found: projects/kubernetesexample-256416/zones/us-east1-c/clusters/my-zoned-cluster.
+No cluster named 'my-zoned-cluster' in kubernetesexample-256416.
+
+MACC02RR83AG8WP:~ vijayvepakomma$ gcloud container clusters delete my-zonal-cluster
+The following clusters will be deleted.
+ - [my-zonal-cluster] in [us-east1-c]
+
+Do you want to continue (Y/n)?  Y
+
+ERROR: (gcloud.container.clusters.delete) Some requests did not succeed:
+ - args: [u'ResponseError: code=404, message=Not found: projects/kubernetesexample-256416/zones/us-east1-c/clusters/my-zonal-cluster.\nCould not find [my-zonal-cluster] in [us-east1-c].\nDid you mean [my-zonal-cluster] in [us-east1-b]?']
+   exit_code: 1
+   message: ResponseError: code=404, message=Not found: projects/kubernetesexample-256416/zones/us-east1-c/clusters/my-zonal-cluster.
+Could not find [my-zonal-cluster] in [us-east1-c].
+Did you mean [my-zonal-cluster] in [us-east1-b]?
+
+MACC02RR83AG8WP:~ vijayvepakomma$ gcloud container clusters list
+NAME                 LOCATION    MASTER_VERSION  MASTER_IP       MACHINE_TYPE   NODE_VERSION   NUM_NODES  STATUS
+my-regional-cluster  us-east1    1.13.11-gke.9   34.73.227.255   n1-standard-1  1.13.11-gke.9  3          RUNNING
+my-zonal-cluster     us-east1-b  1.13.11-gke.9   35.196.121.188  n1-standard-1  1.13.11-gke.9  3          RUNNING
+MACC02RR83AG8WP:~ vijayvepakomma$ gcloud container clusters delete my-zonal-cluster --zone us-east1-b
+The following clusters will be deleted.
+ - [my-zonal-cluster] in [us-east1-b]
+
+Do you want to continue (Y/n)?  Y
+
+Deleting cluster my-zonal-cluster...done.                                                                                                                                                                                                                                      
+Deleted [https://container.googleapis.com/v1/projects/kubernetesexample-256416/zones/us-east1-b/clusters/my-zonal-cluster].
+
+
+MACC02RR83AG8WP:~ vijayvepakomma$ gcloud container node-pools create my-pool --num-nodes=1 --cluster my-regional-cluster --region us-east1
+WARNING: In November 2019, node auto-upgrade will be enabled by default for newly created clusters and node pools. To disable it, use the `--no-enable-autoupgrade` flag.
+WARNING: Starting in 1.12, new node pools will be created with their legacy Compute Engine instance metadata APIs disabled by default. To create a node pool with legacy instance metadata endpoints disabled, run `node-pools create` with the flag `--metadata disable-legacy-endpoints=true`.
+This will enable the autorepair feature for nodes. Please see https://cloud.google.com/kubernetes-engine/docs/node-auto-repair for more information on node autorepairs.
+Creating node pool my-pool...done.                                                                                                                                                                                                                                             
+Created [https://container.googleapis.com/v1/projects/kubernetesexample-256416/zones/us-east1/clusters/my-regional-cluster/nodePools/my-pool].
+NAME     MACHINE_TYPE   DISK_SIZE_GB  NODE_VERSION
+my-pool  n1-standard-1  100           1.13.11-gke.9
+MACC02RR83AG8WP:~ vijayvepakomma$ 
+
+
+
+
+
+
+
+

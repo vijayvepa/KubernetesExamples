@@ -1,0 +1,1 @@
+gcloud container clusters update my-zonal-cluster --zone us-east1-b --logging-service="logging.googleapis.com"
