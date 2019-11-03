@@ -1,0 +1,25 @@
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ gcloud container clusters create my-regional-cluster --num-nodes 2 --region us-east1 --disk-size=15GB --disk-type=pd-standard --enable-autoscaling --min-nodes 1 --max-nodes 10 --enable-autorepair
+WARNING: In November 2019, node auto-upgrade will be enabled by default for newly created clusters and node pools. To disable it, use the `--no-enable-autoupgrade` flag.
+WARNING: Currently VPC-native is not the default mode during cluster creation. In the future, this will become the default mode and can be disabled using `--no-enable-ip-alias` flag. Use `--[no-]enable-ip-alias` flag to suppress this warning.
+WARNING: Starting in 1.12, default node pools in new clusters will have their legacy Compute Engine instance metadata endpoints disabled by default. To create a cluster with legacy instance metadata endpoints disabled in the default node pool, run `clusters create` with the flag `--metadata disable-legacy-endpoints=true`.
+WARNING: Your Pod address range (`--cluster-ipv4-cidr`) can accommodate at most 1008 node(s). 
+This will enable the autorepair feature for nodes. Please see https://cloud.google.com/kubernetes-engine/docs/node-auto-repair for more information on node autorepairs.
+Creating cluster my-regional-cluster in us-east1... Cluster is being health-checked.
+..⠹                                                                                 
+Creating cluster my-regional-cluster in us-east1... Cluster is being health-checked 
+(master is healthy)...done.                                                         
+Created [https://container.googleapis.com/v1/projects/kubernetesexample-256416/zones/us-east1/clusters/my-regional-cluster].
+To inspect the contents of your cluster, go to: https://console.cloud.google.com/kubernetes/workload_/gcloud/us-east1/my-regional-cluster?project=kubernetesexample-256416
+kubeconfig entry generated for my-regional-cluster.
+NAME                 LOCATION  MASTER_VERSION  MASTER_IP      MACHINE_TYPE   NODE_VERSION   NUM_NODES  STATUS
+my-regional-cluster  us-east1  1.13.11-gke.9   34.73.227.255  n1-standard-1  1.13.11-gke.9  6          RUNNING
+MACC02RR83AG8WP:KubernetesExamples vijayvepakomma$ 
+
+
+
+
+
+
+
+
+
