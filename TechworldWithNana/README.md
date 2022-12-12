@@ -1,0 +1,1 @@
+See [Kubernets Tutorial for Beginners](https://www.youtube.com/watch?v=X48VuDVv0do) by Techworld with Nana
